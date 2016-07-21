@@ -30,8 +30,6 @@ namespace GUI
             }
                 
             //Refresh();
-                
-           // cmbBoxTableNames.DataSource = formConnection.tab
         }
 
         private void formMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -39,6 +37,11 @@ namespace GUI
             if (Program.DB != null)
                 Program.DB.ConnectionClose(); //закрываем подключение
             Application.Exit();
+        }
+
+        private void btnGenerate_Click(object sender, EventArgs e)
+        {
+            var tdg = new TextGenerator("RussianMaleNames.txt");
         }
     }
 }

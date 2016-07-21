@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataGen
 {
-    class TextGenerator : TestDataGenerator
+    public class TextGenerator : TestDataGenerator
     {
         /// <summary>
         /// Инициализатор генератора случайных чисел.
@@ -15,9 +14,9 @@ namespace DataGen
         private int _seed;
 
         /// <summary>
-        /// Количество значений в словаре.
+        /// Представление для текстового файла словаря.
         /// </summary>
-        private int _dictionarySize;
+        private Thesaurus _lexicon;
 
         /// <summary>
         /// 
@@ -27,37 +26,19 @@ namespace DataGen
         public TextGenerator(String fileName)
         {
             _seed = DateTime.Now.Millisecond;
-            
-            var fi = new FileInfo(fileName);
-            var sr = fi.OpenText();
-            _dictionarySize = 0;
-            while (!sr.EndOfStream)
-            {
-                if (sr.Read() == '\n')
-                    ++_dictionarySize;  //определяем размер словаря
-            }
-            sr.Close();
+            _lexicon = new Thesaurus(fileName);
         }
 
         public TextGenerator(int seed, String fileName)
         {
             _seed = seed;
-
-            var fi = new FileInfo(fileName);
-            var sr = fi.OpenText();
-            _dictionarySize = 0;
-            while (!sr.EndOfStream)
-            {
-                if (sr.Read() == '\n')
-                    ++_dictionarySize;  //определяем размер словаря
-            }
-            sr.Close();
+            _lexicon = new Thesaurus(fileName);
         }
 
         public override string Next()
         {
-            _rnd.Next(0, _dictionarySize);
-            //TODO: Сделать класс Dictionary (обертка словаря)
+            int index = _rnd.Next(0, _lexicon.Count);
+            return _lexicon[index];
         }
     }
 }

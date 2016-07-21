@@ -16,7 +16,7 @@ namespace DataGen
     //{
 
     //}
-    abstract class TestDataGenerator
+    public abstract class TestDataGenerator
     {
         /// <summary>
         /// Значения уникальны.
