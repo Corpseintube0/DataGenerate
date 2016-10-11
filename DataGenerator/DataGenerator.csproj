@@ -7,8 +7,8 @@
     <ProjectGuid>{1AE7B21D-4822-48DD-9BDD-73547B09FD88}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataGen</RootNamespace>
-    <AssemblyName>DataGen</AssemblyName>
+    <RootNamespace>DataGeneration</RootNamespace>
+    <AssemblyName>DataGeneration</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBLogic.cs" />
+    <Compile Include="GeneratorTypes.cs" />
     <Compile Include="RandomProvider.cs" />
     <Compile Include="TestDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

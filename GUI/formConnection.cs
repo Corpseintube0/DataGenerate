@@ -20,8 +20,8 @@ namespace GUI
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            Program.DB = new DBLogic();
-            Program.DB.Connect(txtBoxConnectionStr.Text);
+
+            ProgramData.DB.Connect(txtBoxConnectionStr.Text);
 
             MessageBox.Show("Подключение к базе успешно.");
             DialogResult = DialogResult.OK;

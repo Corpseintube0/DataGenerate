@@ -43,7 +43,7 @@ namespace DataGen
             get
             {
                 if (index >= _size)
-                    throw new IndexOutOfRangeException(String.Format("Индекс [{0}], размер словаря: {1}", index, _size));
+                    throw new IndexOutOfRangeException(String.Format("Индекс вышел за границы массива. Индекс [{0}], размерность словаря: {1}", index, _size));
 
                 int beginRead = _indicies[index];
                 int count = _indicies[index + 1] - _indicies[index] - 2;

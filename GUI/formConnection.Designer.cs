@@ -72,9 +72,9 @@
             this.rdoBtnConnectionType1.AutoSize = true;
             this.rdoBtnConnectionType1.Location = new System.Drawing.Point(6, 52);
             this.rdoBtnConnectionType1.Name = "rdoBtnConnectionType1";
-            this.rdoBtnConnectionType1.Size = new System.Drawing.Size(85, 17);
+            this.rdoBtnConnectionType1.Size = new System.Drawing.Size(81, 17);
             this.rdoBtnConnectionType1.TabIndex = 4;
-            this.rdoBtnConnectionType1.Text = "radioButton3";
+            this.rdoBtnConnectionType1.Text = "Удаленное";
             this.rdoBtnConnectionType1.UseVisualStyleBackColor = true;
             // 
             // rdoBtnConnectionType0
@@ -83,10 +83,10 @@
             this.rdoBtnConnectionType0.Checked = true;
             this.rdoBtnConnectionType0.Location = new System.Drawing.Point(6, 19);
             this.rdoBtnConnectionType0.Name = "rdoBtnConnectionType0";
-            this.rdoBtnConnectionType0.Size = new System.Drawing.Size(85, 17);
+            this.rdoBtnConnectionType0.Size = new System.Drawing.Size(81, 17);
             this.rdoBtnConnectionType0.TabIndex = 3;
             this.rdoBtnConnectionType0.TabStop = true;
-            this.rdoBtnConnectionType0.Text = "radioButton4";
+            this.rdoBtnConnectionType0.Text = "Локальное";
             this.rdoBtnConnectionType0.UseVisualStyleBackColor = true;
             // 
             // formConnection

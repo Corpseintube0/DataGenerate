@@ -9,8 +9,6 @@ namespace GUI
 {
     static class Program
     {
-        public static DBLogic DB;
-        
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -21,6 +19,10 @@ namespace GUI
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new formMain());
         }
+    }
 
+    static class ProgramData
+    {
+        public static DBLogic DB = new DBLogic();
     }
 }
