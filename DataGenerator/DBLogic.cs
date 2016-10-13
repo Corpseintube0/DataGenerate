@@ -14,6 +14,9 @@ namespace DataGen
     /// </summary>
     public class DBLogic
     {
+        //Строка подключения к БД.
+        public string ConnectionString;
+
         /// <summary>
         /// Подключение к БД.
         /// </summary>
@@ -37,7 +40,7 @@ namespace DataGen
             _conn = new SqlConnection();
             _conn.ConnectionString = connectionString;
             _conn.Open();
-            
+
             return true;
         }
 
@@ -88,7 +91,7 @@ namespace DataGen
         //    command += ")";
 
         //    adapter.InsertCommand = new SqlCommand(command, _conn);
-            
+
         //    return adapter;
         //}
 
@@ -104,13 +107,13 @@ namespace DataGen
             string sql = string.Format("Insert Into {0} (", table); // Оператор SQL
             var schema = GetTableSchema(table); //получили метаданные таблицы
             //DisplayData(schema); //тест
-            foreach(DataRow row in schema.Rows)
+            foreach (DataRow row in schema.Rows)
             {
                 sql += string.Format(" {0}, ", row["ColumnName"]);
             }
             sql = sql.Remove(sql.Length - 2, 2); //удалили ', '
-            sql += ") Values(";
-            for(int i=0; i<values.Length; ++i)
+            sql += " ) Values( ";
+            for (int i = 0; i < values.Length; ++i)
             {
                 sql += string.Format("'{0}',", values[i]); //////
             }
@@ -118,19 +121,35 @@ namespace DataGen
             sql += ")";
 
             //Параметризованная команда
-            using (SqlCommand cmd = new SqlCommand(sql, _conn))
+            using (SqlCommand cmd = new SqlCommand(sql, _conn = new SqlConnection(ConnectionString)))
             {
+                _conn.Open();
                 int i = 0;
-                foreach(DataRow row in schema.Rows)
+                foreach (DataRow row in schema.Rows)
                 {
                     SqlParameter param = new SqlParameter();
-                    param.ParameterName = string.Format("@{0}, ", row["ColumnName"]);
-                    param.Value = values[i];
-                    param.SqlDbType = GetSqlTypeFromString(string.Format("{0}", row["DataTypeName"]));
+                    param.ParameterName = string.Format("@{0}", row["ColumnName"]);
+                    param.SqlDbType = GetSqlTypeFromString(string.Format("{0}", row["DataTypeName"])); //(SqlDbType)row["DataTypeName"]; //
+                    switch (param.SqlDbType)
+                    {
+                        case SqlDbType.UniqueIdentifier:
+                            param.Value = Guid.Parse(values[i]);
+                            break;
+                        case SqlDbType.Date:
+                            param.Value = DateTime.Parse(values[i]);
+                            break;
+                        case SqlDbType.NChar:
+                            param.Value = values[i];
+                            break;
+                        default:
+                            throw new Exception("Неверный тип данных!");
+                    }
+                    ++i;
+                    //тестировать
                     param.Size = (int)row["ColumnSize"];
                     cmd.Parameters.Add(param);
                 }
-                //cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
             }
             return true;
         }
@@ -224,7 +243,6 @@ namespace DataGen
             tw.Close();
             file.Close();
         }
-
 
         /// <summary>
         /// Вывод данных в файл (тест)
@@ -348,19 +366,23 @@ namespace DataGen
         /// <param name="tableName">Имя таблицы.</param>
         public DataTable GetTableSchema(string tableName)
         {
-            SqlCommand command = new SqlCommand("SELECT * FROM " + tableName + ";", _conn);
-            SqlDataReader reader = command.ExecuteReader();
-            DataTable schemaTable = reader.GetSchemaTable();
-            /*
-            foreach (DataRow row in schemaTable.Rows)
+            using (_conn = new SqlConnection(ConnectionString))
             {
-                foreach (DataColumn column in schemaTable.Columns)
+                _conn.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM " + tableName + ";", _conn);
+                SqlDataReader reader = command.ExecuteReader();
+                DataTable schemaTable = reader.GetSchemaTable();
+                /*
+                foreach (DataRow row in schemaTable.Rows)
                 {
-                    Console.WriteLine(String.Format("{0} = {1}", column.ColumnName, row[column]));
+                    foreach (DataColumn column in schemaTable.Columns)
+                    {
+                        Console.WriteLine(String.Format("{0} = {1}", column.ColumnName, row[column]));
+                    }
                 }
+                */
+                return schemaTable;
             }
-            */           
-            return schemaTable;
         }
     }
 }

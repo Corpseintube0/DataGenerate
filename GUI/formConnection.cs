@@ -20,11 +20,13 @@ namespace GUI
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-
-            ProgramData.DB.Connect(txtBoxConnectionStr.Text);
+            ProgramData.DB.ConnectionString = txtBoxConnectionStr.Text;
+            ProgramData.DB.Connect(ProgramData.DB.ConnectionString);
 
             MessageBox.Show("Подключение к базе успешно.");
             DialogResult = DialogResult.OK;
+
+            ProgramData.DB.ConnectionClose();
             Close();
         }
 

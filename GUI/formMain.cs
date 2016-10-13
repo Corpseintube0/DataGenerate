@@ -76,8 +76,9 @@ namespace GUI
         private void btnGenerate_Click(object sender, EventArgs e)
         {
             var tdg = new TextGenerator("RussianMaleNames.txt");
-            ProgramData.DB.InsertIntoTable("Person", new[] { "sa","sd","sdf","asasd" });
-            ProgramData.DB.CreateEnumList();
+            var guid = Guid.NewGuid();
+
+            ProgramData.DB.InsertIntoTable("Person", new[] { guid.ToString(), "Имя1","Фамилия1","2000-12-20" });
 
 
             //TODO: Добавить вывод сгенерированных данных в отчёт
