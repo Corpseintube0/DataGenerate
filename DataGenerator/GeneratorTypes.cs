@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGen
+namespace DataGeneration
 {
     /// <summary>
     /// Задает типы генераторов данных.
@@ -14,6 +14,8 @@ namespace DataGen
         GUID,
         Int,
         Text,
-        Date
+        Date,
+        Names,
+        Surnames,
     }
 }

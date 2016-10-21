@@ -9,7 +9,7 @@ using Microsoft.Data.Schema.Extensibility;
 using Microsoft.Data.Schema.Tools.DataGenerator;
 
 
-namespace DataGen
+namespace DataGeneration
 {
     //[GeneratorStyles(DesignerStyles = GeneratorDesignerStyles.CanProduceUniqueValues)]
     //public class MyGenerator : Generator
@@ -52,6 +52,9 @@ namespace DataGen
             set;
         }
 
+        /// <summary>
+        /// Возвращает сгенерированное значение в соответствии с текущими настройками.
+        /// </summary>
         public abstract string Next();
     }
 }

@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 
-namespace DataGen
+namespace DataGeneration
 {
     /// <summary>
     /// Класс, отвечающий за представление БД.
@@ -22,12 +22,23 @@ namespace DataGen
         /// </summary>
         private SqlConnection _conn;
 
+        private string _serverName;
+        private string _dbName;
+
         /// <summary>
         /// Получает имя подключенной базы данных.
         /// </summary>
         public String DBName
         {
-            get { return _conn.Database; }
+            get { return _dbName; }
+        }
+
+        /// <summary>
+        /// Получает имя сервера.
+        /// </summary>
+        public String ServerName
+        {
+            get { return _serverName; }
         }
 
         /// <summary>
@@ -40,6 +51,8 @@ namespace DataGen
             _conn = new SqlConnection();
             _conn.ConnectionString = connectionString;
             _conn.Open();
+            _dbName = _conn.Database;
+            _serverName = _conn.DataSource;
 
             return true;
         }
@@ -58,13 +71,16 @@ namespace DataGen
         /// </summary>
         /// <param name="queryString">SQL-запрос SELECT.</param>
         /// <returns></returns>
-        public DataSet SelectRows(string queryString = "SELECT * FROM [dbo].[Person]")
+        public DataSet SelectRows(string queryString)
         {
-            DataSet ret = new DataSet();
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(queryString, _conn);
-            adapter.Fill(ret); //заполняем DataSet
-            return ret;
+            using (_conn = new SqlConnection(ConnectionString))
+            {
+                DataSet ret = new DataSet();
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(queryString, _conn);
+                adapter.Fill(ret); //заполняем DataSet
+                return ret;
+            } 
         }
 
         ///// <summary>
@@ -96,7 +112,7 @@ namespace DataGen
         //}
 
         /// <summary>
-        /// Вставка строки в таблицу.
+        /// Вставка строки данных в таблицу.
         /// </summary>
         /// <param name="table"></param>
         /// <param name="values"></param>
@@ -112,7 +128,7 @@ namespace DataGen
                 sql += string.Format(" {0}, ", row["ColumnName"]);
             }
             sql = sql.Remove(sql.Length - 2, 2); //удалили ', '
-            sql += " ) Values( ";
+            sql += ") Values(";
             for (int i = 0; i < values.Length; ++i)
             {
                 sql += string.Format("'{0}',", values[i]); //////
@@ -139,13 +155,21 @@ namespace DataGen
                             param.Value = DateTime.Parse(values[i]);
                             break;
                         case SqlDbType.NChar:
+                        case SqlDbType.Char:
+                        case SqlDbType.NVarChar:
+                        case SqlDbType.VarChar:
+                            param.Value = values[i];
+                            break;
+                        case SqlDbType.Int:
+                        case SqlDbType.BigInt:
+                        case SqlDbType.SmallInt:
+                        case SqlDbType.TinyInt:
                             param.Value = values[i];
                             break;
                         default:
                             throw new Exception("Неверный тип данных!");
                     }
                     ++i;
-                    //тестировать
                     param.Size = (int)row["ColumnSize"];
                     cmd.Parameters.Add(param);
                 }
@@ -297,11 +321,6 @@ namespace DataGen
         /// <param name="tableName">Имя таблицы.</param>
         public String[] GetColumnNames(string tableName)
         {
-            //var schema = GetTableSchema(tableName);
-            //List<string> columnNames = new List<string>();
-            //foreach (DataColumn col in schema.Columns)
-            //    columnNames.Add(col.ColumnName); //получили имена столбцов
-            //return columnNames.ToArray();
             List<string> columnNames = new List<string>();
             var ds = SelectRows("SELECT * FROM " + tableName);
             var workTable = ds.Tables[0];
@@ -314,20 +333,30 @@ namespace DataGen
         /// Получает список с типами столбцов. 
         /// </summary>
         /// <param name="tableName">Имя таблицы.</param>
-        public String[] GetColumnTypes(string tableName)
+        public String[][] GetColumnTypes(string tableName)
         {
-            //var schema = GetTableSchema(tableName);
-            //List<string> columnTypes = new List<string>();
-            //foreach (DataColumn col in schema.Columns)
-            //    columnTypes.Add(col.DataType.ToString()); //получили типы столбцов
-            //return columnTypes.ToArray();
-            List<string> columnTypes = new List<string>();
-            var ds = SelectRows("SELECT * FROM " + tableName);
-            var workTable = ds.Tables[0];
-            foreach (DataColumn column in workTable.Columns)
-                columnTypes.Add(column.DataType.ToString());
+            var schema = GetTableSchema(tableName);
+            List<string[]> columnTypes = new List<string[]>();
+            foreach (DataRow row in schema.Rows)
+            {
+                string type = string.Format("{0}", row["DataTypeName"]);
+                switch (type)
+                {
+                    //тут перечислены те типы для которых важнен размер
+                    case "nchar":
+                    case "nvarchar":
+                    case "char":
+                    case "varchar":
+                    case "text":
+                        int size = (int)row["ColumnSize"];
+                        columnTypes.Add(new string[] { string.Format("{0}", type), size.ToString() });
+                        break;
+                    default:
+                        columnTypes.Add(new string[] { string.Format("{0}", type), "" });
+                        break;
+                }
+            }
             return columnTypes.ToArray();
-
         }
 
         /// <summary>
@@ -372,15 +401,6 @@ namespace DataGen
                 SqlCommand command = new SqlCommand("SELECT * FROM " + tableName + ";", _conn);
                 SqlDataReader reader = command.ExecuteReader();
                 DataTable schemaTable = reader.GetSchemaTable();
-                /*
-                foreach (DataRow row in schemaTable.Rows)
-                {
-                    foreach (DataColumn column in schemaTable.Columns)
-                    {
-                        Console.WriteLine(String.Format("{0} = {1}", column.ColumnName, row[column]));
-                    }
-                }
-                */
                 return schemaTable;
             }
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace DataGen
+namespace DataGeneration
 {
     /// <summary>
     /// Обертка словаря для текстовых генераторов данных.

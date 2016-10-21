@@ -52,8 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeGenerator.cs" />
     <Compile Include="DBLogic.cs" />
     <Compile Include="GeneratorTypes.cs" />
+    <Compile Include="GuidGenerator.cs" />
+    <Compile Include="IntegerGenerator.cs" />
     <Compile Include="RandomProvider.cs" />
     <Compile Include="TestDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
