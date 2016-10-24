@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataGeneration
 {
-    public class TextGenerator : TestDataGenerator
+    public class RandomTextGenerator : TestDataGenerator
     {
         /// <summary>
         /// Инициализатор генератора случайных чисел.
@@ -23,37 +23,36 @@ namespace DataGeneration
         /// </summary>
         private Random _rnd = RandomProvider.GetThreadRandom();
 
-        public TextGenerator(String fileName)
+        public RandomTextGenerator()
         {
             _seed = DateTime.Now.Millisecond;
-            _lexicon = new Thesaurus(fileName);
+            _lexicon = new Thesaurus("pldf-win.txt");
         }
 
-        public TextGenerator(int seed, String fileName)
+        public RandomTextGenerator(int wordsAmt)
         {
-            _seed = seed;
-            _lexicon = new Thesaurus(fileName);
+            _seed = DateTime.Now.Millisecond;
+            WordsAmount = wordsAmt;
+            _lexicon = new Thesaurus("pldf-win.txt");
         }
+
+        public int WordsAmount { get; set; }
 
         public override string Next()
         {
-            int index = _rnd.Next(0, _lexicon.Count);
-            return _lexicon[index];
+            string ret = "";
+            for (int i = 0; i < WordsAmount; ++i)
+            {
+                int index = _rnd.Next(0, _lexicon.Count);
+                ret += _lexicon[index] + " ";
+            }
+            return ret;
         }
 
         public override string[] NextSet(int amt)
         {
             string[] ret;
             ret = new string[amt];
-            //если уникальные и диапазон значений меньше требуемого для уникальных значений
-            if ( _lexicon.Count <= amt && UniqueValues)
-            {
-                amt = _lexicon.Count;
-                ret = new string[amt];
-                for (int i = 0; i < amt; ++i)
-                    ret[i] = _lexicon[i];
-            }
-            else
             if (UniqueValues) //для уникальных значений
             {
                 List<string> retString = new List<string>();
@@ -76,20 +75,7 @@ namespace DataGeneration
                 for (int i = 0; i < amt; ++i)
                     ret[i] = Next();
             }
-
-            if (NullValues > 0) //обнуляем значения из набора на указанный процент
-            {
-                int thunc = amt / (100 / NullValues);
-                for (int i = 0; i < thunc; ++i)
-                    ret[i] = "0";
-            }
-
-            if (EmptyValues > 0) //добавляем пустые значения
-            {
-                int thunc = amt / (100 / EmptyValues);
-                for (int i = 0; i < thunc; ++i)
-                    ret[i] = "";
-            }
+            
             return ret;
         }
     }

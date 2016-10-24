@@ -19,7 +19,7 @@ namespace DataGeneration
     public abstract class TestDataGenerator
     {
         /// <summary>
-        /// Значения уникальны.
+        /// Значения не должны повторяться в наборе.
         /// </summary>
         public bool UniqueValues
         {
@@ -27,7 +27,7 @@ namespace DataGeneration
             set;
         }
         /// <summary>
-        /// Зациклить данные.
+        /// Зациклить данные в наборе.
         /// </summary>
         public bool CicleValues
         {
@@ -35,7 +35,7 @@ namespace DataGeneration
             set;
         }
         /// <summary>
-        /// Процент NULL значений.
+        /// Процент NULL значений в наборе.
         /// </summary>
         public byte NullValues
         {
@@ -44,7 +44,7 @@ namespace DataGeneration
         }
 
         /// <summary>
-        /// Процент пустых значений.
+        /// Процент пустых значений в наборе.
         /// </summary>
         public byte EmptyValues
         {
@@ -53,8 +53,15 @@ namespace DataGeneration
         }
 
         /// <summary>
-        /// Возвращает сгенерированное значение в соответствии с текущими настройками.
+        /// Возвращает сгенерированное значение, в соответствии с текущими настройками.
         /// </summary>
         public abstract string Next();
+
+        /// <summary>
+        /// Возвращает набор сгенерированных значений в виде массива, в соответствии с текущими настройками.
+        /// </summary>
+        /// <param name="count">Количество возвращаемых значений.</param>
+        /// <returns></returns>
+        public abstract string[] NextSet(int amt);
     }
 }

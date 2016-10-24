@@ -128,12 +128,13 @@ namespace DataGeneration
                 sql += string.Format(" {0}, ", row["ColumnName"]);
             }
             sql = sql.Remove(sql.Length - 2, 2); //удалили ', '
+
             sql += ") Values(";
-            for (int i = 0; i < values.Length; ++i)
+            foreach (DataRow row in schema.Rows)
             {
-                sql += string.Format("'{0}',", values[i]); //////
+                sql += string.Format(" @{0}, ", row["ColumnName"]);
             }
-            sql = sql.Remove(sql.Length - 1); //удалили ','
+            sql = sql.Remove(sql.Length - 2); //удалили ','
             sql += ")";
 
             //Параметризованная команда
@@ -146,6 +147,7 @@ namespace DataGeneration
                     SqlParameter param = new SqlParameter();
                     param.ParameterName = string.Format("@{0}", row["ColumnName"]);
                     param.SqlDbType = GetSqlTypeFromString(string.Format("{0}", row["DataTypeName"])); //(SqlDbType)row["DataTypeName"]; //
+                    param.Size = (int)row["ColumnSize"];
                     switch (param.SqlDbType)
                     {
                         case SqlDbType.UniqueIdentifier:
@@ -158,6 +160,10 @@ namespace DataGeneration
                         case SqlDbType.Char:
                         case SqlDbType.NVarChar:
                         case SqlDbType.VarChar:
+                            if (param.Size < values[i].Length)
+                            {
+                                param.Value = values[i].Remove(param.Size - 1);
+                            }
                             param.Value = values[i];
                             break;
                         case SqlDbType.Int:
@@ -170,7 +176,6 @@ namespace DataGeneration
                             throw new Exception("Неверный тип данных!");
                     }
                     ++i;
-                    param.Size = (int)row["ColumnSize"];
                     cmd.Parameters.Add(param);
                 }
                 cmd.ExecuteNonQuery();

@@ -13,6 +13,14 @@ namespace DataGeneration
             return Guid.NewGuid().ToString();
         }
 
+        public override string[] NextSet(int amt)
+        {
+            string[] ret = new string[amt];
+            for (int i = 0; i < amt; ++i)
+                ret[i] = Next();
+            return ret;
+        }
+
         public GuidGenerator()
         {
             

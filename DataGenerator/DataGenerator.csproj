@@ -58,6 +58,7 @@
     <Compile Include="GuidGenerator.cs" />
     <Compile Include="IntegerGenerator.cs" />
     <Compile Include="RandomProvider.cs" />
+    <Compile Include="RandomTextGenerator.cs" />
     <Compile Include="TestDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextGenerator.cs" />
