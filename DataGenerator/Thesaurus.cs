@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     /// <summary>
     /// Обертка словаря для текстовых генераторов данных.
@@ -82,6 +82,7 @@ namespace DataGeneration
                 if (sr.EndOfStream)
                 {
                     indicies.Add(i+2);
+                    ++_size; //////test
                     break;
                 }
             }

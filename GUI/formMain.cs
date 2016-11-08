@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataGeneration;
+using DataGenerator;
 using System.IO;
 
 namespace GUI
@@ -34,14 +34,17 @@ namespace GUI
             formConnection formConnect = new formConnection();
             if (formConnect.ShowDialog() == DialogResult.OK)
             {
-                lblDbName.ForeColor = Color.Black;
-                lblDbName.Text = String.Format("Версия сервера СУБД = {0}\nБаза данных = {1}", ProgramData.DB.ServerName, ProgramData.DB.DBName);
+                this.Text = String.Format("Генератор данных для SQL Server. Версия сервера СУБД: {0}. База данных: {1}", ProgramData.DB.ServerName, ProgramData.DB.DBName);
                 cmbBoxTableNames.DataSource = ProgramData.DB.GetTableNames();
                 FillDataGridView(cmbBoxTableNames.Text);
                 toolStripComboBoxGens.ComboBox.DataSource = Enum.GetNames(typeof(GeneratorTypes)); //GeneratorTypes.cs
             }
             else
+            {
                 this.Close();
+                Application.Exit();
+            }
+                
         }
 
         /// <summary>
@@ -95,6 +98,7 @@ namespace GUI
                         (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Date.ToString();
                         break;
                     case "int":
+                    case "float": //TODO: исправить
                         (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Int.ToString();
                         break;
                     default:
@@ -108,11 +112,6 @@ namespace GUI
             if (ProgramData.DB != null)
                 ProgramData.DB.ConnectionClose(); //закрываем подключение
             Application.Exit();
-        }
-
-        private void btnGenerate_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void InsertDataIntoTable(string[][] arg)
@@ -137,7 +136,7 @@ namespace GUI
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(String.Format("Исключение уровня программной оболочки: {0}", ex.Message));
+                    MessageBox.Show(String.Format("Исключение: {0}", ex.Message));
                     return;
                 }
             }
@@ -153,7 +152,10 @@ namespace GUI
             switch (type)
             {
                 case GeneratorTypes.Names:
-                    return new TextGenerator("RussianMaleNames.txt");
+                    var tg = new TextGenerator("RussianMaleNames.txt");
+                    //tg.UniqueValues = true;
+                    //tg.EmptyValues = 20;
+                    return tg;
                 case GeneratorTypes.Surnames:
                     return new TextGenerator("RussianMaleSurnames.txt");
                 case GeneratorTypes.GUID:
@@ -161,7 +163,7 @@ namespace GUI
                 case GeneratorTypes.Int:
                     return new IntegerGenerator();
                 case GeneratorTypes.Date:
-                    return new DateTimeGenerator(new DateTime(2015, 12, 15), new DateTime(2015, 12, 20));
+                    return new DateTimeGenerator(new DateTime(1960, 12, 15), new DateTime(2000, 12, 20));
                 case GeneratorTypes.Text:
                     return new RandomTextGenerator(100);
                 default:
@@ -222,26 +224,12 @@ namespace GUI
                 sw = new StreamWriter(file);
                 sw.WriteLine("--Данный файл сгенерирован автоматически");
                 sw.WriteLine("--Время генерации: {0}", date.ToString());
-                sw.WriteLine("INSERT INTO [{0}].[dbo].[{1}]", ProgramData.DB.DBName, cmbBoxTableNames.Text);
-                sw.Write("(");
-                for (int i = 0; i < colCount; ++i)
-                {
-                    sw.Write("[{0}]", data[i]);
-                    if (i + 1 != colCount)
-                        sw.Write(", ");
-                    else
-                        sw.Write(")");
-                }
-                sw.WriteLine();
-                sw.WriteLine("VALUES ");
                 sw.Close();
                 file.Dispose();
             }
-
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //Начало генерации TODO: вставить логику для генерации через наборы данных с учетом уникальности, пустоты и т.п.
+            //Начало генерации TODO: связать UI с параметрами генераторов (чтобы пользователь сам мог настраивать генерацию)
             int rowCount = (int)numGenCount.Value; //число строк для генерации
-            //string[][] values = new string[colCount][];
             _currentGeneratedValues = new string[colCount][];
             for (int i = 0; i < colCount; ++i)
                 _currentGeneratedValues[i] = _generators[i].NextSet(rowCount);
@@ -256,28 +244,46 @@ namespace GUI
                 groupBoxPreview.Text = String.Format("Предварительный просмотр сгенерированных данных ({0} строк)", rowCount);
             for (int i = 0; i < rowCount; ++i)
             {
-                if (i < 100)
+                try
                 {
-                    var preview = new string[colCount];
-                    for (int j = 0; j < colCount; ++j)
-                        preview[j] = _currentGeneratedValues[j][i];
-                    dataGridViewPreview.Rows.Add(preview); //Вывод для предварительного просмотра
+                    if (i < 100)
+                    {
+                        var preview = new string[colCount];
+                        for (int j = 0; j < colCount; ++j)
+                            preview[j] = _currentGeneratedValues[j][i];
+                        dataGridViewPreview.Rows.Add(preview); //Вывод для предварительного просмотра
+                    }
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    MessageBox.Show(String.Format("Сгенерировано {0} значений из {1}, т.к. достигнут максимальный размер множества уникальных значений.", i, rowCount), "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    break;
                 }
                 if (sqlExport)
                 {
                     file = fi.Open(FileMode.Append, FileAccess.Write);
                     sw = new StreamWriter(file);
+                    sw.WriteLine("INSERT INTO [{0}].[dbo].[{1}]", ProgramData.DB.DBName, cmbBoxTableNames.Text);
+                    sw.Write("(");
+                    for (int k = 0; k < colCount; ++k)
+                    {
+                        sw.Write("[{0}]", data[k]);
+                        if (k + 1 != colCount)
+                            sw.Write(", ");
+                        else
+                            sw.Write(")");
+                    }
+                    sw.WriteLine();
+                    sw.WriteLine("VALUES ");
                     sw.Write("(");
                     for (int j = 0; j < colCount; ++j)
                     {
-                        sw.Write("'{0}'", _currentGeneratedValues[j]);
+                        sw.Write("'{0}'", _currentGeneratedValues[j][i]);
                         if (j + 1 != colCount)
                             sw.Write(", ");
                         else
                             sw.Write(")");
                     }
-                    if (i + 1 != rowCount)
-                        sw.Write(",");
                     sw.WriteLine("\n");
                     sw.Close();
                     file.Dispose();
@@ -297,6 +303,10 @@ namespace GUI
             if (dataGridViewColumns.CurrentRow == null)
                 return;
             toolStripComboBoxGens.Text = (string)dataGridViewColumns.CurrentRow.Cells[3].Value;
+            dataGridViewColumns.CurrentRow.Selected = true;
+            grpBoxOptions.Text = String.Format("Настройки генерации для {0}", dataGridViewColumns.CurrentRow.Cells[3].Value);
+            if (dataGridViewPreview.Columns.Count > 0)
+                dataGridViewPreview.Columns[dataGridViewColumns.CurrentRow.Index].Selected = true;
         }
 
         //обработчик события
@@ -304,7 +314,22 @@ namespace GUI
         {
             if (dataGridViewColumns.CurrentRow == null)
                 return;
-             dataGridViewColumns.CurrentRow.Cells[3].Value = toolStripComboBoxGens.Text;
+            dataGridViewColumns.CurrentRow.Cells[3].Value = toolStripComboBoxGens.Text;
+            grpBoxOptions.Text = String.Format("Настройки генерации для {0}", dataGridViewColumns.CurrentRow.Cells[3].Value);
+        }
+
+        //Обработка нажатия горячих клавиш
+        private void formMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.F5) //нажата F5
+            {
+                toolStripBtnGenerate.PerformClick();
+            }
+            else
+            if (e.KeyData == Keys.F9) //нажата F5
+            {
+                toolStripBtnInsert.PerformClick();
+            }
         }
     }
 }

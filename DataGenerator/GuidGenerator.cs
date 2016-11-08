@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     public class GuidGenerator : TestDataGenerator
     {

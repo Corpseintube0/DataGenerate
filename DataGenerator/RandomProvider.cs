@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     public static class RandomProvider
     {

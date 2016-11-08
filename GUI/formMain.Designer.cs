@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.подключениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.новоеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,11 +67,7 @@
             this.grpBoxOptions = new System.Windows.Forms.GroupBox();
             this.chkBoxExportToSQL = new System.Windows.Forms.CheckBox();
             this.numGenCount = new System.Windows.Forms.NumericUpDown();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnGenerate = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lblDbName = new System.Windows.Forms.Label();
             this.grpBoxTables = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtBxSearch = new System.Windows.Forms.TextBox();
@@ -85,10 +82,21 @@
             this.ColDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColGenType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
+            this.создатьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.открытьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.сохранитьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.печатьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.вырезатьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.копироватьToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.вставкаToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.справкаToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripBtnGenerate = new System.Windows.Forms.ToolStripButton();
             this.toolStripBtnInsert = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripGenerator = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxGens = new System.Windows.Forms.ToolStripComboBox();
             this.mainMenu.SuspendLayout();
             this.grpBoxGenProps.SuspendLayout();
@@ -101,13 +109,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpDownMin)).BeginInit();
             this.grpBoxOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).BeginInit();
-            this.panel1.SuspendLayout();
             this.grpBoxTables.SuspendLayout();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPreview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).BeginInit();
             this.toolStripMain.SuspendLayout();
+            this.toolStripGenerator.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -236,10 +244,12 @@
             // 
             // textBoxFileName
             // 
+            this.textBoxFileName.Enabled = false;
             this.textBoxFileName.Location = new System.Drawing.Point(235, 40);
             this.textBoxFileName.Name = "textBoxFileName";
             this.textBoxFileName.Size = new System.Drawing.Size(211, 20);
             this.textBoxFileName.TabIndex = 13;
+            this.textBoxFileName.Text = "RussianMaleNames.txt";
             // 
             // label10
             // 
@@ -466,8 +476,6 @@
             // 
             this.grpBoxOptions.Controls.Add(this.chkBoxExportToSQL);
             this.grpBoxOptions.Controls.Add(this.numGenCount);
-            this.grpBoxOptions.Controls.Add(this.btnUpdate);
-            this.grpBoxOptions.Controls.Add(this.btnGenerate);
             this.grpBoxOptions.Controls.Add(this.label3);
             this.grpBoxOptions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpBoxOptions.Location = new System.Drawing.Point(532, 43);
@@ -511,30 +519,6 @@
             0,
             0});
             // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Enabled = false;
-            this.btnUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnUpdate.Location = new System.Drawing.Point(370, 19);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(104, 35);
-            this.btnUpdate.TabIndex = 1;
-            this.btnUpdate.Text = "Insert";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Visible = false;
-            // 
-            // btnGenerate
-            // 
-            this.btnGenerate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnGenerate.Location = new System.Drawing.Point(253, 19);
-            this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(111, 35);
-            this.btnGenerate.TabIndex = 0;
-            this.btnGenerate.Text = "Generate";
-            this.btnGenerate.UseVisualStyleBackColor = true;
-            this.btnGenerate.Visible = false;
-            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -543,26 +527,6 @@
             this.label3.Size = new System.Drawing.Size(110, 13);
             this.label3.TabIndex = 0;
             this.label3.Text = "Генерировать строк";
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.lblDbName);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(523, 34);
-            this.panel1.TabIndex = 11;
-            // 
-            // lblDbName
-            // 
-            this.lblDbName.AutoSize = true;
-            this.lblDbName.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblDbName.ForeColor = System.Drawing.Color.Red;
-            this.lblDbName.Location = new System.Drawing.Point(3, 0);
-            this.lblDbName.Name = "lblDbName";
-            this.lblDbName.Size = new System.Drawing.Size(92, 15);
-            this.lblDbName.TabIndex = 3;
-            this.lblDbName.Text = "Connection lost";
             // 
             // grpBoxTables
             // 
@@ -582,9 +546,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(251, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
+            this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Поиск по столбцам";
+            this.label2.Text = "Поиск";
             // 
             // txtBxSearch
             // 
@@ -621,10 +585,10 @@
             this.tableLayoutPanel.Controls.Add(this.groupBoxPreview, 0, 4);
             this.tableLayoutPanel.Controls.Add(this.grpBoxTables, 0, 1);
             this.tableLayoutPanel.Controls.Add(this.dataGridViewColumns, 0, 2);
-            this.tableLayoutPanel.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel.Controls.Add(this.grpBoxOptions, 1, 1);
             this.tableLayoutPanel.Controls.Add(this.grpBoxGenProps, 1, 2);
-            this.tableLayoutPanel.Controls.Add(this.toolStripMain, 1, 0);
+            this.tableLayoutPanel.Controls.Add(this.toolStripMain, 0, 0);
+            this.tableLayoutPanel.Controls.Add(this.toolStripGenerator, 1, 0);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(0, 24);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
@@ -634,6 +598,7 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 199F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(1018, 545);
             this.tableLayoutPanel.TabIndex = 2;
             // 
@@ -711,18 +676,114 @@
             // toolStripMain
             // 
             this.toolStripMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripMain.GripMargin = new System.Windows.Forms.Padding(3);
             this.toolStripMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripBtnGenerate,
-            this.toolStripBtnInsert,
+            this.создатьToolStripButton,
+            this.открытьToolStripButton,
+            this.сохранитьToolStripButton,
+            this.печатьToolStripButton,
+            this.toolStripSeparator,
+            this.вырезатьToolStripButton,
+            this.копироватьToolStripButton,
+            this.вставкаToolStripButton,
+            this.toolStripSeparator2,
+            this.справкаToolStripButton,
             this.toolStripSeparator1,
-            this.toolStripLabel1,
-            this.toolStripComboBoxGens});
-            this.toolStripMain.Location = new System.Drawing.Point(529, 0);
+            this.toolStripBtnGenerate,
+            this.toolStripBtnInsert});
+            this.toolStripMain.Location = new System.Drawing.Point(0, 0);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(489, 40);
+            this.toolStripMain.Size = new System.Drawing.Size(529, 40);
             this.toolStripMain.TabIndex = 21;
             this.toolStripMain.Text = "toolStrip1";
+            // 
+            // создатьToolStripButton
+            // 
+            this.создатьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.создатьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("создатьToolStripButton.Image")));
+            this.создатьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.создатьToolStripButton.Name = "создатьToolStripButton";
+            this.создатьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.создатьToolStripButton.Text = "&Создать";
+            // 
+            // открытьToolStripButton
+            // 
+            this.открытьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.открытьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("открытьToolStripButton.Image")));
+            this.открытьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.открытьToolStripButton.Name = "открытьToolStripButton";
+            this.открытьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.открытьToolStripButton.Text = "&Открыть";
+            // 
+            // сохранитьToolStripButton
+            // 
+            this.сохранитьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.сохранитьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("сохранитьToolStripButton.Image")));
+            this.сохранитьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.сохранитьToolStripButton.Name = "сохранитьToolStripButton";
+            this.сохранитьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.сохранитьToolStripButton.Text = "&Сохранить";
+            // 
+            // печатьToolStripButton
+            // 
+            this.печатьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.печатьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("печатьToolStripButton.Image")));
+            this.печатьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.печатьToolStripButton.Name = "печатьToolStripButton";
+            this.печатьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.печатьToolStripButton.Text = "&Печать";
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(6, 40);
+            // 
+            // вырезатьToolStripButton
+            // 
+            this.вырезатьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.вырезатьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("вырезатьToolStripButton.Image")));
+            this.вырезатьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.вырезатьToolStripButton.Name = "вырезатьToolStripButton";
+            this.вырезатьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.вырезатьToolStripButton.Text = "В&ырезать";
+            // 
+            // копироватьToolStripButton
+            // 
+            this.копироватьToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.копироватьToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("копироватьToolStripButton.Image")));
+            this.копироватьToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.копироватьToolStripButton.Name = "копироватьToolStripButton";
+            this.копироватьToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.копироватьToolStripButton.Text = "&Копировать";
+            // 
+            // вставкаToolStripButton
+            // 
+            this.вставкаToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.вставкаToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("вставкаToolStripButton.Image")));
+            this.вставкаToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.вставкаToolStripButton.Name = "вставкаToolStripButton";
+            this.вставкаToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.вставкаToolStripButton.Text = "Вст&авка";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 40);
+            // 
+            // справкаToolStripButton
+            // 
+            this.справкаToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.справкаToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("справкаToolStripButton.Image")));
+            this.справкаToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.справкаToolStripButton.Name = "справкаToolStripButton";
+            this.справкаToolStripButton.Size = new System.Drawing.Size(23, 37);
+            this.справкаToolStripButton.Text = "Спр&авка";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripBtnGenerate
             // 
@@ -731,7 +792,7 @@
             this.toolStripBtnGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBtnGenerate.Name = "toolStripBtnGenerate";
             this.toolStripBtnGenerate.Size = new System.Drawing.Size(23, 37);
-            this.toolStripBtnGenerate.Text = "Начать генерацию";
+            this.toolStripBtnGenerate.Text = "Начать генерацию (F5)";
             this.toolStripBtnGenerate.Click += new System.EventHandler(this.toolStripBtnGenerate_Click);
             // 
             // toolStripBtnInsert
@@ -742,25 +803,33 @@
             this.toolStripBtnInsert.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBtnInsert.Name = "toolStripBtnInsert";
             this.toolStripBtnInsert.Size = new System.Drawing.Size(23, 37);
-            this.toolStripBtnInsert.Text = "Вставить данные в БД";
+            this.toolStripBtnInsert.Text = "Вставить данные в БД (F9)";
             this.toolStripBtnInsert.Click += new System.EventHandler(this.toolStripBtnInsert_Click);
             // 
-            // toolStripSeparator1
+            // toolStripGenerator
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
+            this.toolStripGenerator.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripGenerator.GripMargin = new System.Windows.Forms.Padding(3);
+            this.toolStripGenerator.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel2,
+            this.toolStripComboBoxGens});
+            this.toolStripGenerator.Location = new System.Drawing.Point(529, 0);
+            this.toolStripGenerator.Name = "toolStripGenerator";
+            this.toolStripGenerator.Size = new System.Drawing.Size(489, 40);
+            this.toolStripGenerator.TabIndex = 22;
+            this.toolStripGenerator.Text = "toolStrip1";
             // 
-            // toolStripLabel1
+            // toolStripLabel2
             // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(64, 37);
-            this.toolStripLabel1.Text = "Генератор";
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(64, 37);
+            this.toolStripLabel2.Text = "Генератор";
             // 
             // toolStripComboBoxGens
             // 
             this.toolStripComboBoxGens.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripComboBoxGens.Name = "toolStripComboBoxGens";
-            this.toolStripComboBoxGens.Size = new System.Drawing.Size(121, 40);
+            this.toolStripComboBoxGens.Size = new System.Drawing.Size(180, 40);
             this.toolStripComboBoxGens.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxGens_SelectedIndexChanged);
             // 
             // formMain
@@ -770,11 +839,13 @@
             this.ClientSize = new System.Drawing.Size(1018, 569);
             this.Controls.Add(this.tableLayoutPanel);
             this.Controls.Add(this.mainMenu);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.mainMenu;
             this.Name = "formMain";
             this.Text = "Генератор данных для SQL Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
             this.Load += new System.EventHandler(this.formMain_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.formMain_KeyDown);
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
             this.grpBoxGenProps.ResumeLayout(false);
@@ -790,8 +861,6 @@
             this.grpBoxOptions.ResumeLayout(false);
             this.grpBoxOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.grpBoxTables.ResumeLayout(false);
             this.grpBoxTables.PerformLayout();
             this.tableLayoutPanel.ResumeLayout(false);
@@ -801,6 +870,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).EndInit();
             this.toolStripMain.ResumeLayout(false);
             this.toolStripMain.PerformLayout();
+            this.toolStripGenerator.ResumeLayout(false);
+            this.toolStripGenerator.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -834,11 +905,7 @@
         private System.Windows.Forms.NumericUpDown UpDownMin;
         private System.Windows.Forms.GroupBox grpBoxOptions;
         private System.Windows.Forms.NumericUpDown numGenCount;
-        private System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblDbName;
         private System.Windows.Forms.GroupBox grpBoxTables;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtBxSearch;
@@ -848,9 +915,6 @@
         private System.Windows.Forms.GroupBox groupBoxPreview;
         private System.Windows.Forms.DataGridView dataGridViewPreview;
         private System.Windows.Forms.DataGridView dataGridViewColumns;
-        private System.Windows.Forms.ToolStrip toolStripMain;
-        private System.Windows.Forms.ToolStripButton toolStripBtnGenerate;
-        private System.Windows.Forms.ToolStripButton toolStripBtnInsert;
         private System.Windows.Forms.CheckBox chkBoxExportToSQL;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown UpDownNull;
@@ -862,12 +926,26 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnFileSelect;
         private System.Windows.Forms.TextBox textBoxFileName;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxGens;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheck;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDataType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColGenType;
+        private System.Windows.Forms.ToolStrip toolStripMain;
+        private System.Windows.Forms.ToolStripButton toolStripBtnGenerate;
+        private System.Windows.Forms.ToolStripButton toolStripBtnInsert;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStrip toolStripGenerator;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxGens;
+        private System.Windows.Forms.ToolStripButton создатьToolStripButton;
+        private System.Windows.Forms.ToolStripButton открытьToolStripButton;
+        private System.Windows.Forms.ToolStripButton сохранитьToolStripButton;
+        private System.Windows.Forms.ToolStripButton печатьToolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator;
+        private System.Windows.Forms.ToolStripButton вырезатьToolStripButton;
+        private System.Windows.Forms.ToolStripButton копироватьToolStripButton;
+        private System.Windows.Forms.ToolStripButton вставкаToolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton справкаToolStripButton;
     }
 }

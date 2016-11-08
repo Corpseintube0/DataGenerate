@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataGeneration;
+using DataGenerator;
 
 namespace GUI
 {
@@ -21,11 +21,17 @@ namespace GUI
         private void btnConnect_Click(object sender, EventArgs e)
         {
             ProgramData.DB.ConnectionString = txtBoxConnectionStr.Text;
-            ProgramData.DB.Connect(ProgramData.DB.ConnectionString);
-
+            try
+            {
+                ProgramData.DB.Connect(ProgramData.DB.ConnectionString);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
             MessageBox.Show("Подключение к базе успешно.");
             DialogResult = DialogResult.OK;
-
             ProgramData.DB.ConnectionClose();
             Close();
         }
@@ -33,6 +39,11 @@ namespace GUI
         private void formConnection_FormClosing(object sender, FormClosingEventArgs e)
         {
             
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

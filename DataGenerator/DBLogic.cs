@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     /// <summary>
     /// Класс, отвечающий за представление БД.
@@ -50,11 +50,22 @@ namespace DataGeneration
         {
             _conn = new SqlConnection();
             _conn.ConnectionString = connectionString;
-            _conn.Open();
-            _dbName = _conn.Database;
-            _serverName = _conn.DataSource;
-
-            return true;
+            try
+            {
+                _conn.Open();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            if (_conn.State == ConnectionState.Open)
+            {
+                _dbName = _conn.Database;
+                _serverName = _conn.DataSource;
+                return true;
+            }
+            else
+                return false;
         }
 
         /// <summary>
@@ -112,28 +123,23 @@ namespace DataGeneration
         //}
 
         /// <summary>
-        /// Вставка строки данных в таблицу.
+        /// Вставка данных в таблицу.
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="values"></param>
-        /// <returns>True если вставка выполнена успешно, иначе False.</returns>
+        /// <param name="table">Название целевой таблицы.</param>
+        /// <param name="values">Массив значений.</param>
+        /// <returns>True если вставка выполнена успешно.</returns>
         public bool InsertIntoTable(string table, string[] values)
         {
             //Общий вид запроса
             string sql = string.Format("Insert Into {0} (", table); // Оператор SQL
             var schema = GetTableSchema(table); //получили метаданные таблицы
-            //DisplayData(schema); //тест
             foreach (DataRow row in schema.Rows)
-            {
                 sql += string.Format(" {0}, ", row["ColumnName"]);
-            }
             sql = sql.Remove(sql.Length - 2, 2); //удалили ', '
 
             sql += ") Values(";
             foreach (DataRow row in schema.Rows)
-            {
                 sql += string.Format(" @{0}, ", row["ColumnName"]);
-            }
             sql = sql.Remove(sql.Length - 2); //удалили ','
             sql += ")";
 
@@ -182,7 +188,7 @@ namespace DataGeneration
             }
             return true;
         }
-        
+
         //преобразование строки в тип данных
         private SqlDbType GetSqlTypeFromString(string arg)
         {
@@ -314,7 +320,10 @@ namespace DataGeneration
             foreach (DataRow row in rows)
             {
                 foreach (DataColumn column in workTable.Columns)
-                    ret.Add (String.Format("{0}", row[column]));
+                {
+                    if (!(row[column] as string).Contains("sysdiagrams")) //пропустили системную таблицу со связями
+                        ret.Add(String.Format("{0}", row[column]));
+                }
             }
 
             return ret.ToArray();

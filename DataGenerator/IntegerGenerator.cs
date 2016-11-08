@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     public class IntegerGenerator : TestDataGenerator
     {
@@ -30,13 +30,6 @@ namespace DataGeneration
             _upper = to;
         }
 
-        //public IntegerGenerator(int seed, long from, long to)
-        //{
-        //    _seed = seed;
-        //    _lower = from;
-        //    _upper = to;
-        //}
-
         public IntegerGenerator(int from, int to)
         {
             _seed = DateTime.Now.Millisecond;
@@ -44,16 +37,25 @@ namespace DataGeneration
             _upper = to;
         }
 
-        //public IntegerGenerator(long from, long to)
-        //{
-        //    _seed = DateTime.Now.Millisecond;
-        //    _lower = from;
-        //    _upper = to;
-        //}
-
         public override string Next()
         {
             return _rnd.Next(_lower, _upper).ToString();
+        }
+
+        //TODO: test
+        private int[] NextUniqueSet(int amt)
+        {
+            List<int> sort = new List<int>(_upper - _lower + 1);
+            for (int i = _lower; i <= _upper; ++i)
+                sort[i - _lower] = i;   //упорядоченный массив значений на всем диапазоне
+            List<int> nonSort = new List<int>(amt);
+            for (int i = 0; i < amt; ++i)
+            {
+                int index = _rnd.Next(0, sort.Count);
+                nonSort.Add(sort[index]); //случайное число из упорядоченного массива
+                sort.RemoveAt(index); //удалили вхождение случайного числа
+            }
+            return nonSort.ToArray();
         }
 
         public override string[] NextSet(int amt)

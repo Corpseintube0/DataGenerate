@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     public class TextGenerator : TestDataGenerator
     {
@@ -19,7 +19,7 @@ namespace DataGeneration
         private Thesaurus _lexicon;
 
         /// <summary>
-        /// 
+        /// Обертка для класса Random.
         /// </summary>
         private Random _rnd = RandomProvider.GetThreadRandom();
 
@@ -41,6 +41,11 @@ namespace DataGeneration
             return _lexicon[index];
         }
 
+        /// <summary>
+        /// Генерирует набор случайных значений в соответствии с заданными параметрами.
+        /// </summary>
+        /// <param name="amt">Требуемое количество.</param>
+        /// <returns>Набор сгенерированных значений в виде массива типа string.</returns>
         public override string[] NextSet(int amt)
         {
             string[] ret;

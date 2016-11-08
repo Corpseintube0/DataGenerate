@@ -9,7 +9,7 @@ using Microsoft.Data.Schema.Extensibility;
 using Microsoft.Data.Schema.Tools.DataGenerator;
 
 
-namespace DataGeneration
+namespace DataGenerator
 {
     //[GeneratorStyles(DesignerStyles = GeneratorDesignerStyles.CanProduceUniqueValues)]
     //public class MyGenerator : Generator

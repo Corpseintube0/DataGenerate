@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration
+namespace DataGenerator
 {
     public class DateTimeGenerator : TestDataGenerator
     {
@@ -43,15 +43,6 @@ namespace DataGeneration
         {
             string[] ret;
             ret = new string[amt];
-            //если уникальные и диапазон значений меньше требуемого для уникальных значений
-            //if (_upper - _lower <= amt && UniqueValues) //TODO: переделать
-            //{
-            //    amt = _upper - _lower;
-            //    ret = new string[amt];
-            //    for (int i = 0; i < amt; ++i)
-            //        ret[i] = (_lower + i).ToString();
-            //}
-            //else
             if (UniqueValues) //для уникальных значений
             {
                 List<DateTime> retDate = new List<DateTime>();
