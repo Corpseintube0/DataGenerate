@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Data.SQLite;
 
 namespace DataGenerator
 {
@@ -81,7 +82,7 @@ namespace DataGenerator
         /// Выбрать строки из БД.
         /// </summary>
         /// <param name="queryString">SQL-запрос SELECT.</param>
-        /// <returns></returns>
+        /// <returns>DataSet </returns>
         public DataSet SelectRows(string queryString)
         {
             using (_conn = new SqlConnection(ConnectionString))
@@ -280,7 +281,7 @@ namespace DataGenerator
         }
 
         /// <summary>
-        /// Вывод данных в файл (тест)
+        /// Вывод данных в файл (тест) TODO: del
         /// </summary>
         private void DisplayData(DataTable table)
         {
@@ -304,7 +305,7 @@ namespace DataGenerator
         /// </summary>
         public DataSet GetTables()
         {
-            return SelectRows("SELECT * FROM INFORMATION_SCHEMA.TABLES");
+            return SelectRows("SELECT * FROM sys.objects WHERE type in (N'U')");
         }
 
         /// <summary>
@@ -314,7 +315,7 @@ namespace DataGenerator
         {
             var ret = new List<String>();
 
-            var ds = SelectRows("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES");
+            var ds = SelectRows("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES"); 
             var workTable = ds.Tables[0];
             DataRow[] rows = workTable.Select();
             foreach (DataRow row in rows)
@@ -322,7 +323,7 @@ namespace DataGenerator
                 foreach (DataColumn column in workTable.Columns)
                 {
                     if (!(row[column] as string).Contains("sysdiagrams")) //пропустили системную таблицу со связями
-                        ret.Add(String.Format("{0}", row[column]));
+                        ret.Add(String.Format("{0}", row[column])); //TODO: научиться пропускать системные таблицы
                 }
             }
 
@@ -356,7 +357,7 @@ namespace DataGenerator
                 string type = string.Format("{0}", row["DataTypeName"]);
                 switch (type)
                 {
-                    //тут перечислены те типы для которых важнен размер
+                    //перечислены те типы для которых важнен размер
                     case "nchar":
                     case "nvarchar":
                     case "char":
@@ -374,11 +375,11 @@ namespace DataGenerator
         }
 
         /// <summary>
-        /// test
+        /// test TODO: del
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        public String DataSetToString(DataSet arg)
+        public string DataSetToString(DataSet arg)
         {
             var workTable = arg.Tables[0];
             DataRow[] currentRows = workTable.Select();

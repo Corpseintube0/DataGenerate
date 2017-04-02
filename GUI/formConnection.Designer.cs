@@ -1,6 +1,6 @@
 ﻿namespace GUI
 {
-    partial class formConnection
+    partial class FormConnection
     {
         /// <summary>
         /// Обязательная переменная конструктора.

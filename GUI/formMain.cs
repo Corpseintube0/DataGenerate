@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataGenerator;
 using System.IO;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace GUI
 {
-    public partial class formMain : Form
+    public partial class FormMain : Form
     {
 
         //private string[] _genTypes = Enum.GetNames(typeof(GeneratorTypes));
@@ -21,22 +23,78 @@ namespace GUI
         /// Значения, сгенерированные в текущей сессии работы.
         /// </summary>
         private string[][] _currentGeneratedValues;
-
+        /// <summary>
+        /// список таблиц
+        /// </summary>
+        private string[] _tableNames;
+        /// <summary>
+        /// текущая таблица
+        /// </summary>
+        private string _currentTable;
+        //список доступных генераторов
         private TestDataGenerator[] _generators;
 
-        public formMain()
+        
+
+        public FormMain()
         {
             InitializeComponent();
+            //поток с консолью для отладки
+            Task.Factory.StartNew(DebugConsole); //TODO: delete
         }
+
+        /// <summary>
+        /// Для отладки.
+        /// </summary>
+        private void DebugConsole()
+        {
+            
+            // Запускаем консоль.
+            if (AllocConsole())
+            {
+                System.Console.WriteLine("Для выхода наберите exit.");
+                while (true)
+                {
+                    // Считываем данные.
+                    string output = System.Console.ReadLine();
+                    if (output == "exit")
+                        break;
+                    // Выводим данные в textBox
+                    //Action action = () => textBox.Text += output + Environment.NewLine;
+                    //if (InvokeRequired)
+                    //    Invoke(action);
+                    //else
+                    //    action();
+                }
+                // Закрываем консоль.
+                FreeConsole();
+            }
+        }
+        //-==============================================- для консоли TODO: del
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool AllocConsole();
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FreeConsole();
+        //-==============================================-
 
         private void formMain_Load(object sender, EventArgs e)
         {
-            formConnection formConnect = new formConnection();
+            FormConnection formConnect = new FormConnection();
             if (formConnect.ShowDialog() == DialogResult.OK)
             {
-                this.Text = String.Format("Генератор данных для SQL Server. Версия сервера СУБД: {0}. База данных: {1}", ProgramData.DB.ServerName, ProgramData.DB.DBName);
-                cmbBoxTableNames.DataSource = ProgramData.DB.GetTableNames();
-                FillDataGridView(cmbBoxTableNames.Text);
+                this.Text = String.Format("Генератор данных для SQL Server. Версия сервера СУБД: {0}. База данных: {1}", Program.TargetDB.ServerName, Program.TargetDB.DBName);
+                //cmbBoxTableNames.DataSource = ProgramData.DB.GetTableNames();
+                _tableNames = Program.TargetDB.GetTableNames();
+                foreach (var item in _tableNames)
+                {
+                    string[] row = { "false", item };
+                    dataGridViewTables.Rows.Add(row);
+                }
+                //FillDataGridViewColumns(dataGridViewTables.Rows[0].Cells[1].Value.ToString());
+                //FillDataGridViewColumns(_currentTable);
                 toolStripComboBoxGens.ComboBox.DataSource = Enum.GetNames(typeof(GeneratorTypes)); //GeneratorTypes.cs
             }
             else
@@ -44,18 +102,17 @@ namespace GUI
                 this.Close();
                 Application.Exit();
             }
-                
         }
 
         /// <summary>
         /// Заполняет DataGridView метаданными из таблицы.
         /// </summary>
         /// <param name="tableName">Имя таблицы из БД для отображения данных.</param>
-        private void FillDataGridView(string tableName)
+        private void FillDataGridViewColumns(string tableName)
         {
             dataGridViewColumns.Rows.Clear();
-            var names = ProgramData.DB.GetColumnNames(tableName);
-            var types = ProgramData.DB.GetColumnTypes(tableName);
+            var names = Program.TargetDB.GetColumnNames(tableName);
+            var types = Program.TargetDB.GetColumnTypes(tableName);
             for (int i = 0; i < names.Length; ++i)
             {
                 string type = types[i][0];
@@ -64,7 +121,6 @@ namespace GUI
                 string[] row = { "false", names[i], type};
                 dataGridViewColumns.Rows.Add(row);
             }
-
             DataGridViewSuggestTypes();
         }
         
@@ -74,8 +130,8 @@ namespace GUI
         private void DataGridViewSuggestTypes()
         {
             //пока только по типам
-            var types = ProgramData.DB.GetColumnTypes(cmbBoxTableNames.Text);
-            var names = ProgramData.DB.GetColumnNames(cmbBoxTableNames.Text);
+            var types = Program.TargetDB.GetColumnTypes(_currentTable);
+            var names = Program.TargetDB.GetColumnNames(_currentTable);
             for (int i=0; i<types.Length; ++i)
             {
                 switch (types[i][0])
@@ -109,14 +165,14 @@ namespace GUI
 
         private void formMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (ProgramData.DB != null)
-                ProgramData.DB.ConnectionClose(); //закрываем подключение
+            if (Program.TargetDB != null)
+                Program.TargetDB.ConnectionClose(); //закрываем подключение
             Application.Exit();
         }
 
         private void InsertDataIntoTable(string[][] arg)
         {
-            var data = ProgramData.DB.GetColumnNames(cmbBoxTableNames.Text);
+            var data = Program.TargetDB.GetColumnNames(_currentTable);
             int colCount = data.Length; //число столбцов и генераторов
             int rowCount = arg[0].Length;
             string[] temp = new string[1];
@@ -127,7 +183,7 @@ namespace GUI
                     temp[j] = arg[j][i];
                 try
                 {
-                    ProgramData.DB.InsertIntoTable(cmbBoxTableNames.Text, temp); //вставка одной строки в таблицу
+                    Program.TargetDB.InsertIntoTable(_currentTable, temp); //вставка одной строки в таблицу
                 }
                 catch (System.Data.SqlClient.SqlException ex)
                 {
@@ -176,12 +232,18 @@ namespace GUI
         /// </summary>
         private void cmbBoxTableNames_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillDataGridView(cmbBoxTableNames.Text);
+            FillDataGridViewColumns(_currentTable);
         }
 
         private void toolStripBtnGenerate_Click(object sender, EventArgs e)
         {
-            var data = ProgramData.DB.GetColumnNames(cmbBoxTableNames.Text);
+            Cursor.Current = Cursors.WaitCursor;
+            var progressForm = new FormProgress();
+            
+            progressForm.Show();
+            progressForm.Location = new Point(Location.X + Width /2 - progressForm.Width / 2, Location.Y + Height/2 - progressForm.Height / 2);
+
+            var data = Program.TargetDB.GetColumnNames(_currentTable);
             int colCount = data.Length; //число столбцов и генераторов
             _generators = new TestDataGenerator[colCount];
             for (int i = 0; i < colCount; ++i)
@@ -200,7 +262,7 @@ namespace GUI
             if (sqlExport)
             {
                 try
-                {
+                {                    
                     file = fi.Open(FileMode.CreateNew, FileAccess.Write);
                 }
                 catch (IOException) //если файл уже существует, создаем новый, добавляя в конец имени порядковый номер
@@ -230,6 +292,7 @@ namespace GUI
             //////////////////////////////////////////////////////////////////////////////////////////////////////////
             //Начало генерации TODO: связать UI с параметрами генераторов (чтобы пользователь сам мог настраивать генерацию)
             int rowCount = (int)numGenCount.Value; //число строк для генерации
+            progressForm.SetProgressBarSteps(rowCount);
             _currentGeneratedValues = new string[colCount][];
             for (int i = 0; i < colCount; ++i)
                 _currentGeneratedValues[i] = _generators[i].NextSet(rowCount);
@@ -244,6 +307,7 @@ namespace GUI
                 groupBoxPreview.Text = String.Format("Предварительный просмотр сгенерированных данных ({0} строк)", rowCount);
             for (int i = 0; i < rowCount; ++i)
             {
+                progressForm.NextProgressBarStep();
                 try
                 {
                     if (i < 100)
@@ -263,7 +327,7 @@ namespace GUI
                 {
                     file = fi.Open(FileMode.Append, FileAccess.Write);
                     sw = new StreamWriter(file);
-                    sw.WriteLine("INSERT INTO [{0}].[dbo].[{1}]", ProgramData.DB.DBName, cmbBoxTableNames.Text);
+                    sw.WriteLine("INSERT INTO [{0}].[dbo].[{1}]", Program.TargetDB.DBName, _currentTable);
                     sw.Write("(");
                     for (int k = 0; k < colCount; ++k)
                     {
@@ -290,6 +354,8 @@ namespace GUI
                 }
             }
             toolStripBtnInsert.Enabled = true;
+            progressForm.Close(); 
+            Cursor.Current = Cursors.Arrow;
         }
 
         private void toolStripBtnInsert_Click(object sender, EventArgs e)
@@ -326,10 +392,133 @@ namespace GUI
                 toolStripBtnGenerate.PerformClick();
             }
             else
-            if (e.KeyData == Keys.F9) //нажата F5
+            if (e.KeyData == Keys.F9) //нажата F9
             {
                 toolStripBtnInsert.PerformClick();
             }
+        }
+
+        private void buttonShowHideTables_Click(object sender, EventArgs e)
+        {
+            if (splitContainerTables.Panel1Collapsed)
+            {
+                splitContainerTables.Panel1Collapsed = false;
+                this.Left -= 200;
+                this.Width += 200;
+            }
+
+            else
+            {
+                splitContainerTables.Panel1Collapsed = true;
+                this.Left += 200;
+                this.Width -= 200;
+            }
+        }
+
+        private void dataGridViewTables_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridViewTables.CurrentRow.Cells[1].Value == null)
+                return;
+            _currentTable = dataGridViewTables.CurrentRow.Cells[1].Value.ToString();
+            FillDataGridViewColumns(_currentTable);
+        }
+
+        /// <summary>
+        /// Обработчик события: смена состояния столбца CheckBox в строке таблицы.
+        /// </summary>
+        private void dataGridViewColumns_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex != 0)
+                return;
+
+        }
+
+        //отладочный метод TODO: delete
+        private void PrintTable(DataTable dt)
+        {
+            Console.WindowHeight = Console.LargestWindowHeight;
+            Console.WindowWidth = Console.LargestWindowWidth;
+            Console.BufferWidth = 1000;
+
+            foreach (System.Collections.DictionaryEntry de in dt.ExtendedProperties)
+                Console.WriteLine("Ключ = {0}, Значение = {1}", de.Key, de.Value);
+            Console.WriteLine();
+
+            // Создание объекта DataTableReader
+            DataTableReader dtReader = dt.CreateDataReader();
+            while (dtReader.Read())
+            {
+                for (int i = 0; i < dtReader.FieldCount; i++)
+                    Console.Write("{0,-20}", dtReader.GetValue(i).ToString().Trim());
+                Console.WriteLine();
+            }
+            dtReader.Close();
+        }
+
+        //отладочный метод TODO: delete
+        private void PrintDataSet(DataSet ds)
+        {
+            Console.BufferWidth = 1000;
+            // Вывод имени и расширенных свойств
+            Console.WriteLine("*** Объекты DataSet ***\n");
+            Console.WriteLine("Имя DataSet: {0}", ds.DataSetName);
+            foreach (System.Collections.DictionaryEntry de in ds.ExtendedProperties)
+                Console.WriteLine("Ключ = {0}, Значение = {1}", de.Key, de.Value);
+            Console.WriteLine();
+
+            // Вывод каждой таблицы
+            foreach (DataTable dt in ds.Tables)
+            {
+                Console.WriteLine("=> Таблица: {0}", dt.TableName);
+
+                // Вывод имени столбцов
+                for (int curCol = 0; curCol < dt.Columns.Count; ++curCol)
+                    Console.Write("{0,-20}", dt.Columns[curCol].ColumnName);
+                Console.WriteLine("\n----------------------------------------------------------------------------------------------------");
+
+                // Выводим содержимое таблицы
+                PrintTable(dt);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string query =  "SELECT " +
+                            "OBJECT_NAME(constraint_object_id) AS FKName, " +
+                            "OBJECT_NAME(parent_object_id) AS TableName, " +
+                            "COL_NAME(parent_object_id, parent_column_id) AS ColumnName, " +
+                            "OBJECT_NAME(referenced_object_id) AS RefTableName, " +
+                            "COL_NAME(referenced_object_id, referenced_column_id) AS RefColumnName " +
+                            "FROM " +
+                            "sys.foreign_key_columns " +
+                            "ORDER BY " +
+                            "FKName, " +
+                            "constraint_column_id ";
+            var ds = Program.TargetDB.SelectRows(query);
+            PrintDataSet(ds);
+            //TODO: создать в StagedDB таблицы со значениями по внешнему ключу
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                string name = row["TableName"].ToString() + row["ColumnName"].ToString();
+                Program.StagedDB.CreateFKTable(name, "TEXT");
+                string queryToTargetDB = String.Format("SELECT {0} FROM {1}", row["RefColumnName"], row["RefTableName"]);
+                var valuesFormTargetDB = Program.TargetDB.SelectRows(queryToTargetDB);
+                List<string> temp = new List<string>();
+                foreach (DataRow row2 in valuesFormTargetDB.Tables[0].Rows)
+                    temp.Add(row2[0].ToString());
+                Program.StagedDB.FillFKTable(name, temp.ToArray());
+
+                ///////////////////////////////////////////////////////
+                Console.WriteLine();
+                Console.WriteLine("Вывод данных о внешних ключах:");
+                Console.WriteLine("Таблица: " + name);
+                var test = Program.StagedDB.SelectRows("SELECT * FROM " + name);
+                PrintDataSet(test);
+                ///////////////////////////////////////////////////////
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Done");
         }
     }
 }

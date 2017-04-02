@@ -11,19 +11,19 @@ using DataGenerator;
 
 namespace GUI
 {
-    public partial class formConnection : Form
+    public partial class FormConnection : Form
     {
-        public formConnection()
+        public FormConnection()
         {
             InitializeComponent();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            ProgramData.DB.ConnectionString = txtBoxConnectionStr.Text;
+            Program.TargetDB.ConnectionString = txtBoxConnectionStr.Text;
             try
             {
-                ProgramData.DB.Connect(ProgramData.DB.ConnectionString);
+                Program.TargetDB.Connect(Program.TargetDB.ConnectionString);
             }
             catch (Exception ex)
             {
@@ -32,7 +32,7 @@ namespace GUI
             }
             MessageBox.Show("Подключение к базе успешно.");
             DialogResult = DialogResult.OK;
-            ProgramData.DB.ConnectionClose();
+            Program.TargetDB.ConnectionClose();
             Close();
         }
 

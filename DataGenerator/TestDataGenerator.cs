@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Data.Schema;
-using Microsoft.Data.Schema.Sql;
-using Microsoft.Data.Schema.Extensibility;
-using Microsoft.Data.Schema.Tools.DataGenerator;
 
 
 namespace DataGenerator

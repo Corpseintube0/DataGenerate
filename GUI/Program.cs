@@ -9,6 +9,9 @@ namespace GUI
 {
     static class Program
     {
+        public static DBLogic TargetDB = new DBLogic(); //целевая БД
+        public static StagedDB StagedDB = new StagedDB(); //промежуточная БД
+
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -17,12 +20,7 @@ namespace GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new formMain());
+            Application.Run(new FormMain());
         }
-    }
-
-    static class ProgramData
-    {
-        public static DBLogic DB = new DBLogic();
     }
 }

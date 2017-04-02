@@ -1,6 +1,6 @@
 ﻿namespace GUI
 {
-    partial class formMain
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
+            this.splitContainerTables = new System.Windows.Forms.SplitContainer();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.dataGridViewTables = new System.Windows.Forms.DataGridView();
+            this.ColumnCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.mainMenu = new System.Windows.Forms.MenuStrip();
             this.подключениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.новоеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,6 +49,22 @@
             this.закрытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.справкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+            this.dataGridViewPreview = new System.Windows.Forms.DataGridView();
+            this.grpBoxTables = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtBxSearch = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbBoxTableNames = new System.Windows.Forms.ComboBox();
+            this.dataGridViewColumns = new System.Windows.Forms.DataGridView();
+            this.ColCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColGenType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.grpBoxOptions = new System.Windows.Forms.GroupBox();
+            this.chkBoxExportToSQL = new System.Windows.Forms.CheckBox();
+            this.numGenCount = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             this.grpBoxGenProps = new System.Windows.Forms.GroupBox();
             this.btnFileSelect = new System.Windows.Forms.Button();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
@@ -64,23 +87,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.UpDownMin = new System.Windows.Forms.NumericUpDown();
-            this.grpBoxOptions = new System.Windows.Forms.GroupBox();
-            this.chkBoxExportToSQL = new System.Windows.Forms.CheckBox();
-            this.numGenCount = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.grpBoxTables = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtBxSearch = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbBoxTableNames = new System.Windows.Forms.ComboBox();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.dataGridViewPreview = new System.Windows.Forms.DataGridView();
-            this.dataGridViewColumns = new System.Windows.Forms.DataGridView();
-            this.ColCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColGenType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMain = new System.Windows.Forms.ToolStrip();
             this.создатьToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.открытьToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -98,7 +104,22 @@
             this.toolStripGenerator = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxGens = new System.Windows.Forms.ToolStripComboBox();
+            this.panelSplit = new System.Windows.Forms.Panel();
+            this.buttonShowHideTables = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTables)).BeginInit();
+            this.splitContainerTables.Panel1.SuspendLayout();
+            this.splitContainerTables.Panel2.SuspendLayout();
+            this.splitContainerTables.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTables)).BeginInit();
+            this.tableLayoutPanel.SuspendLayout();
             this.mainMenu.SuspendLayout();
+            this.groupBoxPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPreview)).BeginInit();
+            this.grpBoxTables.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).BeginInit();
+            this.grpBoxOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).BeginInit();
             this.grpBoxGenProps.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownNull)).BeginInit();
@@ -107,27 +128,123 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpDownM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownMin)).BeginInit();
-            this.grpBoxOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).BeginInit();
-            this.grpBoxTables.SuspendLayout();
-            this.tableLayoutPanel.SuspendLayout();
-            this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).BeginInit();
             this.toolStripMain.SuspendLayout();
             this.toolStripGenerator.SuspendLayout();
+            this.panelSplit.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitContainerTables
+            // 
+            this.splitContainerTables.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainerTables.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerTables.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerTables.IsSplitterFixed = true;
+            this.splitContainerTables.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerTables.Name = "splitContainerTables";
+            // 
+            // splitContainerTables.Panel1
+            // 
+            this.splitContainerTables.Panel1.Controls.Add(this.textBox1);
+            this.splitContainerTables.Panel1.Controls.Add(this.label11);
+            this.splitContainerTables.Panel1.Controls.Add(this.dataGridViewTables);
+            // 
+            // splitContainerTables.Panel2
+            // 
+            this.splitContainerTables.Panel2.Controls.Add(this.tableLayoutPanel);
+            this.splitContainerTables.Size = new System.Drawing.Size(1250, 569);
+            this.splitContainerTables.SplitterDistance = 200;
+            this.splitContainerTables.TabIndex = 4;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(3, 30);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(192, 20);
+            this.textBox1.TabIndex = 9;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(0, 14);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(47, 13);
+            this.label11.TabIndex = 8;
+            this.label11.Text = "Фильтр";
+            // 
+            // dataGridViewTables
+            // 
+            this.dataGridViewTables.AllowUserToAddRows = false;
+            this.dataGridViewTables.AllowUserToDeleteRows = false;
+            this.dataGridViewTables.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.dataGridViewTables.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTables.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColumnCheck,
+            this.ColumnName});
+            this.dataGridViewTables.Location = new System.Drawing.Point(-3, 56);
+            this.dataGridViewTables.Name = "dataGridViewTables";
+            this.dataGridViewTables.RowHeadersVisible = false;
+            this.dataGridViewTables.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTables.Size = new System.Drawing.Size(201, 512);
+            this.dataGridViewTables.TabIndex = 0;
+            this.dataGridViewTables.SelectionChanged += new System.EventHandler(this.dataGridViewTables_SelectionChanged);
+            // 
+            // ColumnCheck
+            // 
+            this.ColumnCheck.HeaderText = "";
+            this.ColumnCheck.Name = "ColumnCheck";
+            this.ColumnCheck.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnCheck.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.ColumnCheck.Width = 20;
+            // 
+            // ColumnName
+            // 
+            this.ColumnName.HeaderText = "Имя таблицы";
+            this.ColumnName.MinimumWidth = 170;
+            this.ColumnName.Name = "ColumnName";
+            this.ColumnName.ReadOnly = true;
+            this.ColumnName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ColumnName.Width = 176;
+            // 
+            // tableLayoutPanel
+            // 
+            this.tableLayoutPanel.ColumnCount = 3;
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 14F));
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 535F));
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel.Controls.Add(this.mainMenu, 0, 0);
+            this.tableLayoutPanel.Controls.Add(this.groupBoxPreview, 1, 5);
+            this.tableLayoutPanel.Controls.Add(this.grpBoxTables, 1, 2);
+            this.tableLayoutPanel.Controls.Add(this.dataGridViewColumns, 1, 3);
+            this.tableLayoutPanel.Controls.Add(this.grpBoxOptions, 2, 2);
+            this.tableLayoutPanel.Controls.Add(this.grpBoxGenProps, 2, 3);
+            this.tableLayoutPanel.Controls.Add(this.toolStripMain, 1, 1);
+            this.tableLayoutPanel.Controls.Add(this.toolStripGenerator, 2, 1);
+            this.tableLayoutPanel.Controls.Add(this.panelSplit, 0, 2);
+            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel.Name = "tableLayoutPanel";
+            this.tableLayoutPanel.RowCount = 6;
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 199F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(1044, 567);
+            this.tableLayoutPanel.TabIndex = 3;
             // 
             // mainMenu
             // 
+            this.tableLayoutPanel.SetColumnSpan(this.mainMenu, 3);
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.подключениеToolStripMenuItem,
             this.проектToolStripMenuItem,
             this.справкаToolStripMenuItem});
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
             this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(1018, 24);
-            this.mainMenu.TabIndex = 3;
+            this.mainMenu.Size = new System.Drawing.Size(1044, 24);
+            this.mainMenu.TabIndex = 24;
             this.mainMenu.Text = "mainMenu";
             // 
             // подключениеToolStripMenuItem
@@ -212,8 +329,189 @@
             this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.оПрограммеToolStripMenuItem.Text = "О программе";
             // 
+            // groupBoxPreview
+            // 
+            this.tableLayoutPanel.SetColumnSpan(this.groupBoxPreview, 2);
+            this.groupBoxPreview.Controls.Add(this.dataGridViewPreview);
+            this.groupBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPreview.Location = new System.Drawing.Point(17, 353);
+            this.groupBoxPreview.Name = "groupBoxPreview";
+            this.groupBoxPreview.Size = new System.Drawing.Size(1024, 211);
+            this.groupBoxPreview.TabIndex = 20;
+            this.groupBoxPreview.TabStop = false;
+            this.groupBoxPreview.Text = "Предварительный просмотр сгенерированных данных";
+            // 
+            // dataGridViewPreview
+            // 
+            this.dataGridViewPreview.AllowUserToAddRows = false;
+            this.dataGridViewPreview.AllowUserToDeleteRows = false;
+            this.dataGridViewPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewPreview.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewPreview.Name = "dataGridViewPreview";
+            this.dataGridViewPreview.ReadOnly = true;
+            this.dataGridViewPreview.RowHeadersVisible = false;
+            this.dataGridViewPreview.Size = new System.Drawing.Size(1018, 192);
+            this.dataGridViewPreview.TabIndex = 18;
+            // 
+            // grpBoxTables
+            // 
+            this.grpBoxTables.Controls.Add(this.label2);
+            this.grpBoxTables.Controls.Add(this.txtBxSearch);
+            this.grpBoxTables.Controls.Add(this.label1);
+            this.grpBoxTables.Controls.Add(this.cmbBoxTableNames);
+            this.grpBoxTables.Location = new System.Drawing.Point(17, 73);
+            this.grpBoxTables.Name = "grpBoxTables";
+            this.grpBoxTables.Size = new System.Drawing.Size(523, 64);
+            this.grpBoxTables.TabIndex = 10;
+            this.grpBoxTables.TabStop = false;
+            this.grpBoxTables.Text = "Столбцы";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(251, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Поиск";
+            // 
+            // txtBxSearch
+            // 
+            this.txtBxSearch.Location = new System.Drawing.Point(254, 37);
+            this.txtBxSearch.Name = "txtBxSearch";
+            this.txtBxSearch.Size = new System.Drawing.Size(165, 20);
+            this.txtBxSearch.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(86, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Выбор таблицы";
+            // 
+            // cmbBoxTableNames
+            // 
+            this.cmbBoxTableNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxTableNames.FormattingEnabled = true;
+            this.cmbBoxTableNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.cmbBoxTableNames.Location = new System.Drawing.Point(9, 36);
+            this.cmbBoxTableNames.Name = "cmbBoxTableNames";
+            this.cmbBoxTableNames.Size = new System.Drawing.Size(211, 21);
+            this.cmbBoxTableNames.TabIndex = 4;
+            this.cmbBoxTableNames.SelectedIndexChanged += new System.EventHandler(this.cmbBoxTableNames_SelectedIndexChanged);
+            // 
+            // dataGridViewColumns
+            // 
+            this.dataGridViewColumns.AllowUserToAddRows = false;
+            this.dataGridViewColumns.AllowUserToDeleteRows = false;
+            this.dataGridViewColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewColumns.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ColCheck,
+            this.ColName,
+            this.ColDataType,
+            this.ColGenType});
+            this.dataGridViewColumns.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewColumns.Location = new System.Drawing.Point(17, 143);
+            this.dataGridViewColumns.Name = "dataGridViewColumns";
+            this.dataGridViewColumns.RowHeadersVisible = false;
+            this.dataGridViewColumns.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewColumns.Size = new System.Drawing.Size(529, 204);
+            this.dataGridViewColumns.TabIndex = 14;
+            this.dataGridViewColumns.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewColumns_CellValueChanged);
+            this.dataGridViewColumns.SelectionChanged += new System.EventHandler(this.dataGridViewColumns_SelectionChanged);
+            // 
+            // ColCheck
+            // 
+            this.ColCheck.Frozen = true;
+            this.ColCheck.HeaderText = "";
+            this.ColCheck.Name = "ColCheck";
+            this.ColCheck.Width = 20;
+            // 
+            // ColName
+            // 
+            this.ColName.Frozen = true;
+            this.ColName.HeaderText = "Имя столбца";
+            this.ColName.Name = "ColName";
+            this.ColName.ReadOnly = true;
+            this.ColName.Width = 200;
+            // 
+            // ColDataType
+            // 
+            this.ColDataType.Frozen = true;
+            this.ColDataType.HeaderText = "Тип данных";
+            this.ColDataType.Name = "ColDataType";
+            this.ColDataType.ReadOnly = true;
+            // 
+            // ColGenType
+            // 
+            this.ColGenType.HeaderText = "Тип генератора";
+            this.ColGenType.Name = "ColGenType";
+            this.ColGenType.ReadOnly = true;
+            this.ColGenType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.ColGenType.Width = 150;
+            // 
+            // grpBoxOptions
+            // 
+            this.grpBoxOptions.Controls.Add(this.chkBoxExportToSQL);
+            this.grpBoxOptions.Controls.Add(this.numGenCount);
+            this.grpBoxOptions.Controls.Add(this.label3);
+            this.grpBoxOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpBoxOptions.Location = new System.Drawing.Point(552, 73);
+            this.grpBoxOptions.Name = "grpBoxOptions";
+            this.grpBoxOptions.Size = new System.Drawing.Size(489, 64);
+            this.grpBoxOptions.TabIndex = 15;
+            this.grpBoxOptions.TabStop = false;
+            this.grpBoxOptions.Text = "Настройки генерации";
+            // 
+            // chkBoxExportToSQL
+            // 
+            this.chkBoxExportToSQL.AutoSize = true;
+            this.chkBoxExportToSQL.Checked = true;
+            this.chkBoxExportToSQL.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoxExportToSQL.Location = new System.Drawing.Point(102, 38);
+            this.chkBoxExportToSQL.Name = "chkBoxExportToSQL";
+            this.chkBoxExportToSQL.Size = new System.Drawing.Size(130, 17);
+            this.chkBoxExportToSQL.TabIndex = 3;
+            this.chkBoxExportToSQL.Text = "Экспорт в SQL-файл";
+            this.chkBoxExportToSQL.UseVisualStyleBackColor = true;
+            // 
+            // numGenCount
+            // 
+            this.numGenCount.Location = new System.Drawing.Point(9, 37);
+            this.numGenCount.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numGenCount.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numGenCount.Name = "numGenCount";
+            this.numGenCount.Size = new System.Drawing.Size(76, 20);
+            this.numGenCount.TabIndex = 2;
+            this.numGenCount.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 20);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(110, 13);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Генерировать строк";
+            // 
             // grpBoxGenProps
             // 
+            this.grpBoxGenProps.Controls.Add(this.button1);
             this.grpBoxGenProps.Controls.Add(this.btnFileSelect);
             this.grpBoxGenProps.Controls.Add(this.textBoxFileName);
             this.grpBoxGenProps.Controls.Add(this.label10);
@@ -226,9 +524,9 @@
             this.grpBoxGenProps.Controls.Add(this.chkBoxNull);
             this.grpBoxGenProps.Controls.Add(this.grpBoxNumericParams);
             this.grpBoxGenProps.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpBoxGenProps.Location = new System.Drawing.Point(532, 113);
+            this.grpBoxGenProps.Location = new System.Drawing.Point(552, 143);
             this.grpBoxGenProps.Name = "grpBoxGenProps";
-            this.grpBoxGenProps.Size = new System.Drawing.Size(483, 204);
+            this.grpBoxGenProps.Size = new System.Drawing.Size(489, 204);
             this.grpBoxGenProps.TabIndex = 16;
             this.grpBoxGenProps.TabStop = false;
             this.grpBoxGenProps.Text = "Параметры генератора";
@@ -472,207 +770,6 @@
             this.UpDownMin.Size = new System.Drawing.Size(57, 20);
             this.UpDownMin.TabIndex = 0;
             // 
-            // grpBoxOptions
-            // 
-            this.grpBoxOptions.Controls.Add(this.chkBoxExportToSQL);
-            this.grpBoxOptions.Controls.Add(this.numGenCount);
-            this.grpBoxOptions.Controls.Add(this.label3);
-            this.grpBoxOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpBoxOptions.Location = new System.Drawing.Point(532, 43);
-            this.grpBoxOptions.Name = "grpBoxOptions";
-            this.grpBoxOptions.Size = new System.Drawing.Size(483, 64);
-            this.grpBoxOptions.TabIndex = 15;
-            this.grpBoxOptions.TabStop = false;
-            this.grpBoxOptions.Text = "Настройки генерации";
-            // 
-            // chkBoxExportToSQL
-            // 
-            this.chkBoxExportToSQL.AutoSize = true;
-            this.chkBoxExportToSQL.Checked = true;
-            this.chkBoxExportToSQL.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBoxExportToSQL.Location = new System.Drawing.Point(102, 38);
-            this.chkBoxExportToSQL.Name = "chkBoxExportToSQL";
-            this.chkBoxExportToSQL.Size = new System.Drawing.Size(130, 17);
-            this.chkBoxExportToSQL.TabIndex = 3;
-            this.chkBoxExportToSQL.Text = "Экспорт в SQL-файл";
-            this.chkBoxExportToSQL.UseVisualStyleBackColor = true;
-            // 
-            // numGenCount
-            // 
-            this.numGenCount.Location = new System.Drawing.Point(9, 37);
-            this.numGenCount.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.numGenCount.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numGenCount.Name = "numGenCount";
-            this.numGenCount.Size = new System.Drawing.Size(76, 20);
-            this.numGenCount.TabIndex = 2;
-            this.numGenCount.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(110, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Генерировать строк";
-            // 
-            // grpBoxTables
-            // 
-            this.grpBoxTables.Controls.Add(this.label2);
-            this.grpBoxTables.Controls.Add(this.txtBxSearch);
-            this.grpBoxTables.Controls.Add(this.label1);
-            this.grpBoxTables.Controls.Add(this.cmbBoxTableNames);
-            this.grpBoxTables.Location = new System.Drawing.Point(3, 43);
-            this.grpBoxTables.Name = "grpBoxTables";
-            this.grpBoxTables.Size = new System.Drawing.Size(523, 64);
-            this.grpBoxTables.TabIndex = 10;
-            this.grpBoxTables.TabStop = false;
-            this.grpBoxTables.Text = "Таблицы и столбцы";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(251, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(39, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Поиск";
-            // 
-            // txtBxSearch
-            // 
-            this.txtBxSearch.Location = new System.Drawing.Point(254, 37);
-            this.txtBxSearch.Name = "txtBxSearch";
-            this.txtBxSearch.Size = new System.Drawing.Size(165, 20);
-            this.txtBxSearch.TabIndex = 6;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Выбор таблицы";
-            // 
-            // cmbBoxTableNames
-            // 
-            this.cmbBoxTableNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxTableNames.FormattingEnabled = true;
-            this.cmbBoxTableNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.cmbBoxTableNames.Location = new System.Drawing.Point(9, 36);
-            this.cmbBoxTableNames.Name = "cmbBoxTableNames";
-            this.cmbBoxTableNames.Size = new System.Drawing.Size(211, 21);
-            this.cmbBoxTableNames.TabIndex = 4;
-            this.cmbBoxTableNames.SelectedIndexChanged += new System.EventHandler(this.cmbBoxTableNames_SelectedIndexChanged);
-            // 
-            // tableLayoutPanel
-            // 
-            this.tableLayoutPanel.ColumnCount = 2;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 529F));
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Controls.Add(this.groupBoxPreview, 0, 4);
-            this.tableLayoutPanel.Controls.Add(this.grpBoxTables, 0, 1);
-            this.tableLayoutPanel.Controls.Add(this.dataGridViewColumns, 0, 2);
-            this.tableLayoutPanel.Controls.Add(this.grpBoxOptions, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.grpBoxGenProps, 1, 2);
-            this.tableLayoutPanel.Controls.Add(this.toolStripMain, 0, 0);
-            this.tableLayoutPanel.Controls.Add(this.toolStripGenerator, 1, 0);
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 24);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 5;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 199F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1018, 545);
-            this.tableLayoutPanel.TabIndex = 2;
-            // 
-            // groupBoxPreview
-            // 
-            this.tableLayoutPanel.SetColumnSpan(this.groupBoxPreview, 2);
-            this.groupBoxPreview.Controls.Add(this.dataGridViewPreview);
-            this.groupBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxPreview.Location = new System.Drawing.Point(3, 323);
-            this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(1012, 219);
-            this.groupBoxPreview.TabIndex = 20;
-            this.groupBoxPreview.TabStop = false;
-            this.groupBoxPreview.Text = "Предварительный просмотр сгенерированных данных";
-            // 
-            // dataGridViewPreview
-            // 
-            this.dataGridViewPreview.AllowUserToAddRows = false;
-            this.dataGridViewPreview.AllowUserToDeleteRows = false;
-            this.dataGridViewPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewPreview.Location = new System.Drawing.Point(3, 16);
-            this.dataGridViewPreview.Name = "dataGridViewPreview";
-            this.dataGridViewPreview.ReadOnly = true;
-            this.dataGridViewPreview.Size = new System.Drawing.Size(1006, 200);
-            this.dataGridViewPreview.TabIndex = 18;
-            // 
-            // dataGridViewColumns
-            // 
-            this.dataGridViewColumns.AllowUserToAddRows = false;
-            this.dataGridViewColumns.AllowUserToDeleteRows = false;
-            this.dataGridViewColumns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewColumns.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ColCheck,
-            this.ColName,
-            this.ColDataType,
-            this.ColGenType});
-            this.dataGridViewColumns.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewColumns.Location = new System.Drawing.Point(3, 113);
-            this.dataGridViewColumns.Name = "dataGridViewColumns";
-            this.dataGridViewColumns.Size = new System.Drawing.Size(523, 204);
-            this.dataGridViewColumns.TabIndex = 14;
-            this.dataGridViewColumns.SelectionChanged += new System.EventHandler(this.dataGridViewColumns_SelectionChanged);
-            // 
-            // ColCheck
-            // 
-            this.ColCheck.Frozen = true;
-            this.ColCheck.HeaderText = "";
-            this.ColCheck.Name = "ColCheck";
-            this.ColCheck.Width = 30;
-            // 
-            // ColName
-            // 
-            this.ColName.Frozen = true;
-            this.ColName.HeaderText = "Имя столбца";
-            this.ColName.Name = "ColName";
-            this.ColName.ReadOnly = true;
-            this.ColName.Width = 200;
-            // 
-            // ColDataType
-            // 
-            this.ColDataType.Frozen = true;
-            this.ColDataType.HeaderText = "Тип данных";
-            this.ColDataType.Name = "ColDataType";
-            this.ColDataType.ReadOnly = true;
-            // 
-            // ColGenType
-            // 
-            this.ColGenType.HeaderText = "Тип генератора";
-            this.ColGenType.Name = "ColGenType";
-            this.ColGenType.ReadOnly = true;
-            this.ColGenType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.ColGenType.Width = 150;
-            // 
             // toolStripMain
             // 
             this.toolStripMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -692,9 +789,9 @@
             this.toolStripSeparator1,
             this.toolStripBtnGenerate,
             this.toolStripBtnInsert});
-            this.toolStripMain.Location = new System.Drawing.Point(0, 0);
+            this.toolStripMain.Location = new System.Drawing.Point(14, 30);
             this.toolStripMain.Name = "toolStripMain";
-            this.toolStripMain.Size = new System.Drawing.Size(529, 40);
+            this.toolStripMain.Size = new System.Drawing.Size(535, 40);
             this.toolStripMain.TabIndex = 21;
             this.toolStripMain.Text = "toolStrip1";
             // 
@@ -813,9 +910,9 @@
             this.toolStripGenerator.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
             this.toolStripComboBoxGens});
-            this.toolStripGenerator.Location = new System.Drawing.Point(529, 0);
+            this.toolStripGenerator.Location = new System.Drawing.Point(549, 30);
             this.toolStripGenerator.Name = "toolStripGenerator";
-            this.toolStripGenerator.Size = new System.Drawing.Size(489, 40);
+            this.toolStripGenerator.Size = new System.Drawing.Size(495, 40);
             this.toolStripGenerator.TabIndex = 22;
             this.toolStripGenerator.Text = "toolStrip1";
             // 
@@ -832,22 +929,67 @@
             this.toolStripComboBoxGens.Size = new System.Drawing.Size(180, 40);
             this.toolStripComboBoxGens.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxGens_SelectedIndexChanged);
             // 
-            // formMain
+            // panelSplit
+            // 
+            this.panelSplit.Controls.Add(this.buttonShowHideTables);
+            this.panelSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelSplit.Location = new System.Drawing.Point(0, 70);
+            this.panelSplit.Margin = new System.Windows.Forms.Padding(0);
+            this.panelSplit.Name = "panelSplit";
+            this.tableLayoutPanel.SetRowSpan(this.panelSplit, 4);
+            this.panelSplit.Size = new System.Drawing.Size(14, 497);
+            this.panelSplit.TabIndex = 23;
+            // 
+            // buttonShowHideTables
+            // 
+            this.buttonShowHideTables.Location = new System.Drawing.Point(0, 168);
+            this.buttonShowHideTables.Name = "buttonShowHideTables";
+            this.buttonShowHideTables.Size = new System.Drawing.Size(15, 131);
+            this.buttonShowHideTables.TabIndex = 0;
+            this.buttonShowHideTables.UseVisualStyleBackColor = true;
+            this.buttonShowHideTables.Click += new System.EventHandler(this.buttonShowHideTables_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(266, 136);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(162, 23);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "тест внешних ключей";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1018, 569);
-            this.Controls.Add(this.tableLayoutPanel);
-            this.Controls.Add(this.mainMenu);
+            this.ClientSize = new System.Drawing.Size(1250, 569);
+            this.Controls.Add(this.splitContainerTables);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
-            this.MainMenuStrip = this.mainMenu;
-            this.Name = "formMain";
+            this.Name = "FormMain";
             this.Text = "Генератор данных для SQL Server";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formMain_FormClosing);
             this.Load += new System.EventHandler(this.formMain_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.formMain_KeyDown);
+            this.splitContainerTables.Panel1.ResumeLayout(false);
+            this.splitContainerTables.Panel1.PerformLayout();
+            this.splitContainerTables.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTables)).EndInit();
+            this.splitContainerTables.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTables)).EndInit();
+            this.tableLayoutPanel.ResumeLayout(false);
+            this.tableLayoutPanel.PerformLayout();
             this.mainMenu.ResumeLayout(false);
             this.mainMenu.PerformLayout();
+            this.groupBoxPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPreview)).EndInit();
+            this.grpBoxTables.ResumeLayout(false);
+            this.grpBoxTables.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).EndInit();
+            this.grpBoxOptions.ResumeLayout(false);
+            this.grpBoxOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).EndInit();
             this.grpBoxGenProps.ResumeLayout(false);
             this.grpBoxGenProps.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -858,40 +1000,41 @@
             ((System.ComponentModel.ISupportInitialize)(this.UpDownM)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.UpDownMin)).EndInit();
-            this.grpBoxOptions.ResumeLayout(false);
-            this.grpBoxOptions.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numGenCount)).EndInit();
-            this.grpBoxTables.ResumeLayout(false);
-            this.grpBoxTables.PerformLayout();
-            this.tableLayoutPanel.ResumeLayout(false);
-            this.tableLayoutPanel.PerformLayout();
-            this.groupBoxPreview.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewColumns)).EndInit();
             this.toolStripMain.ResumeLayout(false);
             this.toolStripMain.PerformLayout();
             this.toolStripGenerator.ResumeLayout(false);
             this.toolStripGenerator.PerformLayout();
+            this.panelSplit.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip mainMenu;
-        private System.Windows.Forms.ToolStripMenuItem проектToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem открытьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem закрытьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem подключениеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem новоеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.SplitContainer splitContainerTables;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        private System.Windows.Forms.GroupBox groupBoxPreview;
+        private System.Windows.Forms.DataGridView dataGridViewPreview;
+        private System.Windows.Forms.GroupBox grpBoxTables;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtBxSearch;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cmbBoxTableNames;
+        private System.Windows.Forms.DataGridView dataGridViewColumns;
+        private System.Windows.Forms.GroupBox grpBoxOptions;
+        private System.Windows.Forms.CheckBox chkBoxExportToSQL;
+        private System.Windows.Forms.NumericUpDown numGenCount;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox grpBoxGenProps;
+        private System.Windows.Forms.Button btnFileSelect;
+        private System.Windows.Forms.TextBox textBoxFileName;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox chkBoxUnique;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.CheckBox chkBoxEmpty;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown UpDownNull;
+        private System.Windows.Forms.CheckBox chkBoxNull;
         private System.Windows.Forms.GroupBox grpBoxNumericParams;
         private System.Windows.Forms.NumericUpDown UpDownSKO;
         private System.Windows.Forms.Label label7;
@@ -903,40 +1046,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown UpDownMin;
-        private System.Windows.Forms.GroupBox grpBoxOptions;
-        private System.Windows.Forms.NumericUpDown numGenCount;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox grpBoxTables;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtBxSearch;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbBoxTableNames;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private System.Windows.Forms.GroupBox groupBoxPreview;
-        private System.Windows.Forms.DataGridView dataGridViewPreview;
-        private System.Windows.Forms.DataGridView dataGridViewColumns;
-        private System.Windows.Forms.CheckBox chkBoxExportToSQL;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown UpDownNull;
-        private System.Windows.Forms.CheckBox chkBoxNull;
-        private System.Windows.Forms.CheckBox chkBoxUnique;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.CheckBox chkBoxEmpty;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button btnFileSelect;
-        private System.Windows.Forms.TextBox textBoxFileName;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheck;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColDataType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColGenType;
         private System.Windows.Forms.ToolStrip toolStripMain;
-        private System.Windows.Forms.ToolStripButton toolStripBtnGenerate;
-        private System.Windows.Forms.ToolStripButton toolStripBtnInsert;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStrip toolStripGenerator;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxGens;
         private System.Windows.Forms.ToolStripButton создатьToolStripButton;
         private System.Windows.Forms.ToolStripButton открытьToolStripButton;
         private System.Windows.Forms.ToolStripButton сохранитьToolStripButton;
@@ -947,5 +1057,36 @@
         private System.Windows.Forms.ToolStripButton вставкаToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton справкаToolStripButton;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripBtnGenerate;
+        private System.Windows.Forms.ToolStripButton toolStripBtnInsert;
+        private System.Windows.Forms.ToolStrip toolStripGenerator;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxGens;
+        private System.Windows.Forms.Panel panelSplit;
+        private System.Windows.Forms.Button buttonShowHideTables;
+        private System.Windows.Forms.DataGridView dataGridViewTables;
+        private System.Windows.Forms.MenuStrip mainMenu;
+        private System.Windows.Forms.ToolStripMenuItem подключениеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem новоеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem проектToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem открытьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem параметрыToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem закрытьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem справкаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColCheck;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColDataType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColGenType;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnCheck;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
+        private System.Windows.Forms.Button button1;
     }
 }

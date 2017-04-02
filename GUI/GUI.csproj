@@ -52,17 +52,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="formConnection.cs">
+    <Compile Include="FormConnection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formConnection.Designer.cs">
-      <DependentUpon>formConnection.cs</DependentUpon>
+    <Compile Include="FormConnection.Designer.cs">
+      <DependentUpon>FormConnection.cs</DependentUpon>
     </Compile>
-    <Compile Include="formMain.cs">
+    <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="formMain.Designer.cs">
-      <DependentUpon>formMain.cs</DependentUpon>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormProgress.Designer.cs">
+      <DependentUpon>FormProgress.cs</DependentUpon>
     </Compile>
     <Compile Include="Icons.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -71,11 +77,14 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="formConnection.resx">
-      <DependentUpon>formConnection.cs</DependentUpon>
+    <EmbeddedResource Include="FormConnection.resx">
+      <DependentUpon>FormConnection.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="formMain.resx">
-      <DependentUpon>formMain.cs</DependentUpon>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormProgress.resx">
+      <DependentUpon>FormProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Icons.resx">
       <Generator>ResXFileCodeGenerator</Generator>
