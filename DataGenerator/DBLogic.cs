@@ -326,7 +326,6 @@ namespace DataGenerator
                         ret.Add(String.Format("{0}", row[column])); //TODO: научиться пропускать системные таблицы
                 }
             }
-
             return ret.ToArray();
         }
 

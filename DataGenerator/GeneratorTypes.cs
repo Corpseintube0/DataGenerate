@@ -17,5 +17,6 @@ namespace DataGenerator
         Date,
         Names,
         Surnames,
+        ForeinKey
     }
 }

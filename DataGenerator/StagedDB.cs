@@ -29,6 +29,13 @@ namespace DataGenerator
             var names = GetTableList();
             foreach (string tableName in names)
                 DropTable(tableName);
+            using (_conn = new SQLiteConnection(_connectionString))
+            {
+                _conn.Open();
+                SQLiteCommand command =
+                    new SQLiteCommand("CREATE TABLE FKList (FKName TEXT PRIMARY KEY, TableName TEXT, ColumnName TEXT, RefTableName TEXT, RefColumnName TEXT);", _conn);
+                command.ExecuteNonQuery();
+            }
         }
 
         /// <summary>
@@ -70,7 +77,7 @@ namespace DataGenerator
             using (_conn = new SQLiteConnection(_connectionString))
             {
                 _conn.Open();
-                var query = string.Format("CREATE TABLE {0} (val {1} PRIMARY KEY);", tableName, valueType);
+                var query = string.Format("CREATE TABLE {0} (FK_value {1} PRIMARY KEY);", tableName, valueType);
                 SQLiteCommand command = new SQLiteCommand(query, _conn);
                 command.ExecuteNonQuery();
             }
@@ -87,9 +94,35 @@ namespace DataGenerator
                 SQLiteCommand command;
                 foreach (string value in values)
                 {
-                    command = new SQLiteCommand(String.Format("INSERT INTO '{0}' ('val') VALUES ('{1}');", tableName, value), _conn);
+                    command = new SQLiteCommand(String.Format("INSERT INTO '{0}' ('FK_value') VALUES ('{1}');", tableName, value), _conn);
                     command.ExecuteNonQuery();
                 }
+            }
+        }
+
+        public void InsertDataset(string tableName, DataSet newDataSet)
+        {
+            using (_conn = new SQLiteConnection(_connectionString))
+            {
+                string sql = string.Format("SELECT * FROM {0};", tableName);
+                _conn.Open();
+                SQLiteDataAdapter adapter = new SQLiteDataAdapter(sql, _conn);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                foreach (DataRow row in newDataSet.Tables[0].Rows)
+                {
+                    DataRow newRow = ds.Tables[0].NewRow();
+                    newRow["FKName"] = row["FKName"];
+                    newRow["TableName"] = row["TableName"];
+                    newRow["ColumnName"] = row["ColumnName"];
+                    newRow["RefTableName"] = row["RefTableName"];
+                    newRow["RefColumnName"] = row["RefColumnName"];
+                    ds.Tables[0].Rows.Add(newRow);
+                }
+                SQLiteCommandBuilder commandBuilder = new SQLiteCommandBuilder(adapter);
+                adapter.Update(ds);
+                // перезагружаем данные
+                adapter.Fill(ds);
             }
         }
 

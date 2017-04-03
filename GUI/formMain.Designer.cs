@@ -55,7 +55,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtBxSearch = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmbBoxTableNames = new System.Windows.Forms.ComboBox();
+            this.cmbBoxColType = new System.Windows.Forms.ComboBox();
             this.dataGridViewColumns = new System.Windows.Forms.DataGridView();
             this.ColCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.ColName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -106,7 +106,6 @@
             this.toolStripComboBoxGens = new System.Windows.Forms.ToolStripComboBox();
             this.panelSplit = new System.Windows.Forms.Panel();
             this.buttonShowHideTables = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTables)).BeginInit();
             this.splitContainerTables.Panel1.SuspendLayout();
             this.splitContainerTables.Panel2.SuspendLayout();
@@ -167,9 +166,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(0, 14);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(47, 13);
+            this.label11.Size = new System.Drawing.Size(122, 13);
             this.label11.TabIndex = 8;
-            this.label11.Text = "Фильтр";
+            this.label11.Text = "Фильтр (имя таблицы)";
             // 
             // dataGridViewTables
             // 
@@ -181,6 +180,7 @@
             this.ColumnCheck,
             this.ColumnName});
             this.dataGridViewTables.Location = new System.Drawing.Point(-3, 56);
+            this.dataGridViewTables.MultiSelect = false;
             this.dataGridViewTables.Name = "dataGridViewTables";
             this.dataGridViewTables.RowHeadersVisible = false;
             this.dataGridViewTables.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -348,6 +348,7 @@
             this.dataGridViewPreview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewPreview.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewPreview.MultiSelect = false;
             this.dataGridViewPreview.Name = "dataGridViewPreview";
             this.dataGridViewPreview.ReadOnly = true;
             this.dataGridViewPreview.RowHeadersVisible = false;
@@ -359,7 +360,7 @@
             this.grpBoxTables.Controls.Add(this.label2);
             this.grpBoxTables.Controls.Add(this.txtBxSearch);
             this.grpBoxTables.Controls.Add(this.label1);
-            this.grpBoxTables.Controls.Add(this.cmbBoxTableNames);
+            this.grpBoxTables.Controls.Add(this.cmbBoxColType);
             this.grpBoxTables.Location = new System.Drawing.Point(17, 73);
             this.grpBoxTables.Name = "grpBoxTables";
             this.grpBoxTables.Size = new System.Drawing.Size(523, 64);
@@ -372,15 +373,15 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(251, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.Size = new System.Drawing.Size(120, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Поиск";
+            this.label2.Text = "Фильтр (имя столбца)";
             // 
             // txtBxSearch
             // 
             this.txtBxSearch.Location = new System.Drawing.Point(254, 37);
             this.txtBxSearch.Name = "txtBxSearch";
-            this.txtBxSearch.Size = new System.Drawing.Size(165, 20);
+            this.txtBxSearch.Size = new System.Drawing.Size(216, 20);
             this.txtBxSearch.TabIndex = 6;
             // 
             // label1
@@ -388,20 +389,23 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(8, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
+            this.label1.Size = new System.Drawing.Size(99, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Выбор таблицы";
+            this.label1.Text = "Вид отображения:";
             // 
-            // cmbBoxTableNames
+            // cmbBoxColType
             // 
-            this.cmbBoxTableNames.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbBoxTableNames.FormattingEnabled = true;
-            this.cmbBoxTableNames.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.cmbBoxTableNames.Location = new System.Drawing.Point(9, 36);
-            this.cmbBoxTableNames.Name = "cmbBoxTableNames";
-            this.cmbBoxTableNames.Size = new System.Drawing.Size(211, 21);
-            this.cmbBoxTableNames.TabIndex = 4;
-            this.cmbBoxTableNames.SelectedIndexChanged += new System.EventHandler(this.cmbBoxTableNames_SelectedIndexChanged);
+            this.cmbBoxColType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbBoxColType.FormattingEnabled = true;
+            this.cmbBoxColType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.cmbBoxColType.Items.AddRange(new object[] {
+            "Все столбцы",
+            "Только неназначенные"});
+            this.cmbBoxColType.Location = new System.Drawing.Point(9, 36);
+            this.cmbBoxColType.Name = "cmbBoxColType";
+            this.cmbBoxColType.Size = new System.Drawing.Size(211, 21);
+            this.cmbBoxColType.TabIndex = 4;
+            this.cmbBoxColType.SelectedIndexChanged += new System.EventHandler(this.cmbColType_SelectedIndexChanged);
             // 
             // dataGridViewColumns
             // 
@@ -415,6 +419,7 @@
             this.ColGenType});
             this.dataGridViewColumns.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewColumns.Location = new System.Drawing.Point(17, 143);
+            this.dataGridViewColumns.MultiSelect = false;
             this.dataGridViewColumns.Name = "dataGridViewColumns";
             this.dataGridViewColumns.RowHeadersVisible = false;
             this.dataGridViewColumns.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -511,7 +516,6 @@
             // 
             // grpBoxGenProps
             // 
-            this.grpBoxGenProps.Controls.Add(this.button1);
             this.grpBoxGenProps.Controls.Add(this.btnFileSelect);
             this.grpBoxGenProps.Controls.Add(this.textBoxFileName);
             this.grpBoxGenProps.Controls.Add(this.label10);
@@ -949,16 +953,6 @@
             this.buttonShowHideTables.UseVisualStyleBackColor = true;
             this.buttonShowHideTables.Click += new System.EventHandler(this.buttonShowHideTables_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(266, 136);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(162, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "тест внешних ключей";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1018,7 +1012,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtBxSearch;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbBoxTableNames;
+        private System.Windows.Forms.ComboBox cmbBoxColType;
         private System.Windows.Forms.DataGridView dataGridViewColumns;
         private System.Windows.Forms.GroupBox grpBoxOptions;
         private System.Windows.Forms.CheckBox chkBoxExportToSQL;
@@ -1087,6 +1081,5 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnCheck;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
-        private System.Windows.Forms.Button button1;
     }
 }

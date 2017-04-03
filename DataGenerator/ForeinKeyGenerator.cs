@@ -3,97 +3,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using System.Data.Common;
 
 namespace DataGenerator
 {
-    public class TextGenerator : TestDataGenerator
+    public class ForeignKeyGenerator : TestDataGenerator
     {
+        /// <summary>
+        /// Набор значений.
+        /// </summary>
+        private DataSet _ds;
+
         /// <summary>
         /// Инициализатор генератора случайных чисел.
         /// </summary>
         private int _seed;
 
         /// <summary>
-        /// Представление для текстового файла словаря.
-        /// </summary>
-        private Thesaurus _lexicon;
-
-        /// <summary>
         /// Обертка для класса Random.
         /// </summary>
         private Random _rnd = RandomProvider.GetThreadRandom();
 
-        public TextGenerator(String fileName)
+        public ForeignKeyGenerator(DataSet arg)
         {
             _seed = DateTime.Now.Millisecond;
-            _lexicon = new Thesaurus(fileName);
+            _ds = arg;
         }
-
-        public TextGenerator(int seed, String fileName)
-        {
-            _seed = seed;
-            _lexicon = new Thesaurus(fileName);
-        }
-
         public override string Next()
         {
-            int index = _rnd.Next(0, _lexicon.Count - 1);
-            return _lexicon[index];
+            DataTable dt = _ds.Tables[0];
+            int count = dt.Rows.Count;
+            int index = _rnd.Next(0, count - 1);
+
+            return dt.Rows[index].ItemArray[0].ToString();
         }
 
-        /// <summary>
-        /// Генерирует набор случайных значений в соответствии с заданными параметрами.
-        /// </summary>
-        /// <param name="amt">Требуемое количество.</param>
-        /// <returns>Набор сгенерированных значений в виде массива типа string.</returns>
         public override string[] NextSet(int amt)
         {
             string[] ret;
             ret = new string[amt];
             //если уникальные и диапазон значений меньше требуемого для уникальных значений
-            if ( _lexicon.Count <= amt && UniqueValues)
+            if (_ds.Tables[0].Rows.Count <= amt && UniqueValues)
             {
-                amt = _lexicon.Count;
+                amt = _ds.Tables[0].Rows.Count;
                 ret = new string[amt];
                 for (int i = 0; i < amt; ++i)
-                    ret[i] = _lexicon[i];
+                    ret[i] = _ds.Tables[0].Rows[i].ItemArray[0].ToString();
             }
             else
             if (UniqueValues) //для уникальных значений
             {
-                List<string> retString = new List<string>();
+                List<string> retList = new List<string>();
                 for (int i = 0; i < amt; ++i)
                 {
                     string temp = Next();
-                    if (Array.IndexOf(retString.ToArray(), temp) > -1)
+                    if (Array.IndexOf(retList.ToArray(), temp) > -1)
                     {
                         --i;
                         continue;
                     }
                     else
-                        retString.Add(temp);
+                        retList.Add(temp);
                 }
                 for (int i = 0; i < amt; ++i)
-                    ret[i] = retString[i];
+                    ret[i] = retList[i];
             }
             else //обычный случай
             {
                 for (int i = 0; i < amt; ++i)
                     ret[i] = Next();
             }
-
             if (NullValues > 0) //обнуляем значения из набора на указанный процент
             {
                 int thunc = amt / (100 / NullValues);
                 for (int i = 0; i < thunc; ++i)
-                    ret[i] = "0";
-            }
-
-            if (EmptyValues > 0) //добавляем пустые значения
-            {
-                int thunc = amt / (100 / EmptyValues);
-                for (int i = 0; i < thunc; ++i)
-                    ret[i] = "";
+                    ret[i] = null;
             }
             return ret;
         }

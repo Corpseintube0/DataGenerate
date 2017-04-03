@@ -9,8 +9,18 @@ namespace GUI
 {
     static class Program
     {
-        public static DBLogic TargetDB = new DBLogic(); //целевая БД
-        public static StagedDB StagedDB = new StagedDB(); //промежуточная БД
+        private static DBLogic _targetDB = new DBLogic(); //целевая БД
+        private static StagedDB _stagedDB = new StagedDB(); //промежуточная БД
+
+        public static DBLogic TargetDB
+        {
+            get { return _targetDB; }
+        }
+
+        public static StagedDB StagedDB
+        {
+            get { return _stagedDB; }
+        }
 
         /// <summary>
         /// Главная точка входа для приложения.

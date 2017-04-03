@@ -48,7 +48,6 @@ namespace GUI
         /// </summary>
         private void DebugConsole()
         {
-            
             // Запускаем консоль.
             if (AllocConsole())
             {
@@ -86,7 +85,7 @@ namespace GUI
             if (formConnect.ShowDialog() == DialogResult.OK)
             {
                 this.Text = String.Format("Генератор данных для SQL Server. Версия сервера СУБД: {0}. База данных: {1}", Program.TargetDB.ServerName, Program.TargetDB.DBName);
-                //cmbBoxTableNames.DataSource = ProgramData.DB.GetTableNames();
+                cmbBoxColType.SelectedIndex = 0;
                 _tableNames = Program.TargetDB.GetTableNames();
                 foreach (var item in _tableNames)
                 {
@@ -96,6 +95,32 @@ namespace GUI
                 //FillDataGridViewColumns(dataGridViewTables.Rows[0].Cells[1].Value.ToString());
                 //FillDataGridViewColumns(_currentTable);
                 toolStripComboBoxGens.ComboBox.DataSource = Enum.GetNames(typeof(GeneratorTypes)); //GeneratorTypes.cs
+
+                string query =  "SELECT " +
+                                "OBJECT_NAME(constraint_object_id) AS FKName, " +
+                                "OBJECT_NAME(parent_object_id) AS TableName, " +
+                                "COL_NAME(parent_object_id, parent_column_id) AS ColumnName, " +
+                                "OBJECT_NAME(referenced_object_id) AS RefTableName, " +
+                                "COL_NAME(referenced_object_id, referenced_column_id) AS RefColumnName " +
+                                "FROM " +
+                                "sys.foreign_key_columns " +
+                                "ORDER BY " +
+                                "FKName, " +
+                                "constraint_column_id ";
+                var ds = Program.TargetDB.SelectRows(query);
+                Program.StagedDB.InsertDataset("FKList", ds); //заполняем таблицу промежуточной БД данными о внешних ключах
+                DataGridViewSuggestTypes();
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    string name = row["TableName"].ToString() + row["ColumnName"].ToString();
+                    Program.StagedDB.CreateFKTable(name, "TEXT");
+                    string queryToTargetDB = String.Format("SELECT {0} FROM {1}", row["RefColumnName"], row["RefTableName"]);
+                    var valuesFormTargetDB = Program.TargetDB.SelectRows(queryToTargetDB);
+                    List<string> temp = new List<string>();
+                    foreach (DataRow row2 in valuesFormTargetDB.Tables[0].Rows)
+                        temp.Add(row2[0].ToString());
+                    Program.StagedDB.FillFKTable(name, temp.ToArray());
+                }
             }
             else
             {
@@ -129,16 +154,31 @@ namespace GUI
         /// </summary>
         private void DataGridViewSuggestTypes()
         {
-            //пока только по типам
             var types = Program.TargetDB.GetColumnTypes(_currentTable);
             var names = Program.TargetDB.GetColumnNames(_currentTable);
+
+            //проверяем есть ли в текущей таблице внешние ключи
+            string sql = String.Format("SELECT TableName, ColumnName FROM FKList WHERE TableName = '{0}'", _currentTable);
+            DataSet ds = Program.StagedDB.SelectRows(sql);
+            List<string> fkColumns = new List<string>();
+            if (ds.Tables != null)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                    fkColumns.Add(row.ItemArray[1].ToString());
+            }
+
             for (int i=0; i<types.Length; ++i)
             {
+                if (fkColumns.Contains(names[i]))
+                {
+                    dataGridViewColumns.Rows[i].Cells[3].Value = GeneratorTypes.ForeinKey.ToString();
+                    continue;
+                }
                 switch (types[i][0])
                 {
                     case "uniqueidentifier":
                         (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.GUID.ToString();
-                        //TODO: нужно как-то заблокировать имена, не относящиеся к данному типу
+                        //TODO: нужно заблокировать имена, не относящиеся к данному типу
                         break;
                     case "nchar":
                     case "nvarchar":
@@ -228,11 +268,11 @@ namespace GUI
         }
 
         /// <summary>
-        /// Срабатывает при изменении выбранной из списка таблицы.
+        /// Срабатывает при изменении режима просмотра столбцов.
         /// </summary>
-        private void cmbBoxTableNames_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbColType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillDataGridViewColumns(_currentTable);
+            //FillDataGridViewColumns(_currentTable);
         }
 
         private void toolStripBtnGenerate_Click(object sender, EventArgs e)
@@ -241,18 +281,32 @@ namespace GUI
             var progressForm = new FormProgress();
             
             progressForm.Show();
-            progressForm.Location = new Point(Location.X + Width /2 - progressForm.Width / 2, Location.Y + Height/2 - progressForm.Height / 2);
+            progressForm.Location = new Point(Location.X + Width / 2 - progressForm.Width / 2, Location.Y + Height/2 - progressForm.Height / 2);
 
-            var data = Program.TargetDB.GetColumnNames(_currentTable);
-            int colCount = data.Length; //число столбцов и генераторов
+            var colNames = Program.TargetDB.GetColumnNames(_currentTable);
+            int colCount = colNames.Length; //число столбцов и генераторов
             _generators = new TestDataGenerator[colCount];
             for (int i = 0; i < colCount; ++i)
             {
                 object gen = Enum.Parse(typeof(GeneratorTypes), (string)dataGridViewColumns.Rows[i].Cells[3].Value);
-                if ((GeneratorTypes)gen == GeneratorTypes.Int)
-                    _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
-                else
-                    _generators[i] = GetGeneratorFromType((GeneratorTypes)gen);
+                switch ((GeneratorTypes)gen)
+                {
+                    case GeneratorTypes.Int:
+                        _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
+                        break;
+                    case GeneratorTypes.ForeinKey:
+                        //TODO: Выполнить назначение генератора с соответствующим DataSet
+                        DataSet ds = Program.StagedDB.SelectRows(string.Format("SELECT * FROM {0}{1};", _currentTable, colNames[i]));
+                        _generators[i] = new ForeignKeyGenerator(ds);
+                        break;
+                    default:
+                        _generators[i] = GetGeneratorFromType((GeneratorTypes)gen);
+                        break;
+                }
+                //if ((GeneratorTypes)gen == GeneratorTypes.Int)
+                //    _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
+                //else
+                //    _generators[i] = GetGeneratorFromType((GeneratorTypes)gen);
             }
             bool sqlExport = chkBoxExportToSQL.Checked;
             StreamWriter sw;
@@ -298,8 +352,8 @@ namespace GUI
                 _currentGeneratedValues[i] = _generators[i].NextSet(rowCount);
 
             dataGridViewPreview.Columns.Clear();
-            for (int i = 0; i < data.Length; ++i)
-                dataGridViewPreview.Columns.Add(string.Format("column{0}", i), data[i]);
+            for (int i = 0; i < colNames.Length; ++i)
+                dataGridViewPreview.Columns.Add(string.Format("column{0}", i), colNames[i]);
 
             if (rowCount > 100)
                 groupBoxPreview.Text = String.Format("Предварительный просмотр сгенерированных данных (первые 100 строк из {0})", rowCount);
@@ -331,7 +385,7 @@ namespace GUI
                     sw.Write("(");
                     for (int k = 0; k < colCount; ++k)
                     {
-                        sw.Write("[{0}]", data[k]);
+                        sw.Write("[{0}]", colNames[k]);
                         if (k + 1 != colCount)
                             sw.Write(", ");
                         else
@@ -369,6 +423,10 @@ namespace GUI
             if (dataGridViewColumns.CurrentRow == null)
                 return;
             toolStripComboBoxGens.Text = (string)dataGridViewColumns.CurrentRow.Cells[3].Value;
+            if ((string)dataGridViewColumns.CurrentRow.Cells[3].Value == GeneratorTypes.ForeinKey.ToString())
+                toolStripComboBoxGens.Enabled = false;
+            else
+                toolStripComboBoxGens.Enabled = true;
             dataGridViewColumns.CurrentRow.Selected = true;
             grpBoxOptions.Text = String.Format("Настройки генерации для {0}", dataGridViewColumns.CurrentRow.Cells[3].Value);
             if (dataGridViewPreview.Columns.Count > 0)
@@ -380,6 +438,11 @@ namespace GUI
         {
             if (dataGridViewColumns.CurrentRow == null)
                 return;
+            if (toolStripComboBoxGens.Text == "ForeinKey")
+            {
+                toolStripComboBoxGens.Text = dataGridViewColumns.CurrentRow.Cells[3].Value.ToString();
+                return;
+            }
             dataGridViewColumns.CurrentRow.Cells[3].Value = toolStripComboBoxGens.Text;
             grpBoxOptions.Text = String.Format("Настройки генерации для {0}", dataGridViewColumns.CurrentRow.Cells[3].Value);
         }
@@ -421,6 +484,12 @@ namespace GUI
                 return;
             _currentTable = dataGridViewTables.CurrentRow.Cells[1].Value.ToString();
             FillDataGridViewColumns(_currentTable);
+            if (dataGridViewColumns.Rows.Count != 0)
+            {
+                dataGridViewColumns.Rows[0].Selected = true;
+                dataGridViewColumns_SelectionChanged(sender, new EventArgs());
+            }
+            grpBoxTables.Text = "Столбцы таблицы " + dataGridViewTables.CurrentRow.Cells[1].Value.ToString();
         }
 
         /// <summary>
@@ -469,7 +538,7 @@ namespace GUI
             // Вывод каждой таблицы
             foreach (DataTable dt in ds.Tables)
             {
-                Console.WriteLine("=> Таблица: {0}", dt.TableName);
+                //Console.WriteLine("=> Таблица: {0}", dt.TableName);
 
                 // Вывод имени столбцов
                 for (int curCol = 0; curCol < dt.Columns.Count; ++curCol)
@@ -479,46 +548,6 @@ namespace GUI
                 // Выводим содержимое таблицы
                 PrintTable(dt);
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string query =  "SELECT " +
-                            "OBJECT_NAME(constraint_object_id) AS FKName, " +
-                            "OBJECT_NAME(parent_object_id) AS TableName, " +
-                            "COL_NAME(parent_object_id, parent_column_id) AS ColumnName, " +
-                            "OBJECT_NAME(referenced_object_id) AS RefTableName, " +
-                            "COL_NAME(referenced_object_id, referenced_column_id) AS RefColumnName " +
-                            "FROM " +
-                            "sys.foreign_key_columns " +
-                            "ORDER BY " +
-                            "FKName, " +
-                            "constraint_column_id ";
-            var ds = Program.TargetDB.SelectRows(query);
-            PrintDataSet(ds);
-            //TODO: создать в StagedDB таблицы со значениями по внешнему ключу
-            foreach (DataRow row in ds.Tables[0].Rows)
-            {
-                string name = row["TableName"].ToString() + row["ColumnName"].ToString();
-                Program.StagedDB.CreateFKTable(name, "TEXT");
-                string queryToTargetDB = String.Format("SELECT {0} FROM {1}", row["RefColumnName"], row["RefTableName"]);
-                var valuesFormTargetDB = Program.TargetDB.SelectRows(queryToTargetDB);
-                List<string> temp = new List<string>();
-                foreach (DataRow row2 in valuesFormTargetDB.Tables[0].Rows)
-                    temp.Add(row2[0].ToString());
-                Program.StagedDB.FillFKTable(name, temp.ToArray());
-
-                ///////////////////////////////////////////////////////
-                Console.WriteLine();
-                Console.WriteLine("Вывод данных о внешних ключах:");
-                Console.WriteLine("Таблица: " + name);
-                var test = Program.StagedDB.SelectRows("SELECT * FROM " + name);
-                PrintDataSet(test);
-                ///////////////////////////////////////////////////////
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("Done");
         }
     }
 }
