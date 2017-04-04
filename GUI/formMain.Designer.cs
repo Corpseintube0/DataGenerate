@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.splitContainerTables = new System.Windows.Forms.SplitContainer();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxTableNameFilter = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.dataGridViewTables = new System.Windows.Forms.DataGridView();
             this.ColumnCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -53,7 +53,7 @@
             this.dataGridViewPreview = new System.Windows.Forms.DataGridView();
             this.grpBoxTables = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtBxSearch = new System.Windows.Forms.TextBox();
+            this.txtBoxColumnFilter = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cmbBoxColType = new System.Windows.Forms.ComboBox();
             this.dataGridViewColumns = new System.Windows.Forms.DataGridView();
@@ -143,7 +143,7 @@
             // 
             // splitContainerTables.Panel1
             // 
-            this.splitContainerTables.Panel1.Controls.Add(this.textBox1);
+            this.splitContainerTables.Panel1.Controls.Add(this.textBoxTableNameFilter);
             this.splitContainerTables.Panel1.Controls.Add(this.label11);
             this.splitContainerTables.Panel1.Controls.Add(this.dataGridViewTables);
             // 
@@ -154,12 +154,14 @@
             this.splitContainerTables.SplitterDistance = 200;
             this.splitContainerTables.TabIndex = 4;
             // 
-            // textBox1
+            // textBoxTableNameFilter
             // 
-            this.textBox1.Location = new System.Drawing.Point(3, 30);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(192, 20);
-            this.textBox1.TabIndex = 9;
+            this.textBoxTableNameFilter.Location = new System.Drawing.Point(3, 30);
+            this.textBoxTableNameFilter.Name = "textBoxTableNameFilter";
+            this.textBoxTableNameFilter.Size = new System.Drawing.Size(192, 20);
+            this.textBoxTableNameFilter.TabIndex = 9;
+            this.textBoxTableNameFilter.TextChanged += new System.EventHandler(this.textBoxTableNameFilter_TextChanged);
+            this.textBoxTableNameFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxTableNameFilter_KeyDown);
             // 
             // label11
             // 
@@ -358,7 +360,7 @@
             // grpBoxTables
             // 
             this.grpBoxTables.Controls.Add(this.label2);
-            this.grpBoxTables.Controls.Add(this.txtBxSearch);
+            this.grpBoxTables.Controls.Add(this.txtBoxColumnFilter);
             this.grpBoxTables.Controls.Add(this.label1);
             this.grpBoxTables.Controls.Add(this.cmbBoxColType);
             this.grpBoxTables.Location = new System.Drawing.Point(17, 73);
@@ -377,12 +379,14 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Фильтр (имя столбца)";
             // 
-            // txtBxSearch
+            // txtBoxColumnFilter
             // 
-            this.txtBxSearch.Location = new System.Drawing.Point(254, 37);
-            this.txtBxSearch.Name = "txtBxSearch";
-            this.txtBxSearch.Size = new System.Drawing.Size(216, 20);
-            this.txtBxSearch.TabIndex = 6;
+            this.txtBoxColumnFilter.Location = new System.Drawing.Point(254, 37);
+            this.txtBoxColumnFilter.Name = "txtBoxColumnFilter";
+            this.txtBoxColumnFilter.Size = new System.Drawing.Size(216, 20);
+            this.txtBoxColumnFilter.TabIndex = 6;
+            this.txtBoxColumnFilter.TextChanged += new System.EventHandler(this.txtBoxColumnFilter_TextChanged);
+            this.txtBoxColumnFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBoxColumnFilter_KeyDown);
             // 
             // label1
             // 
@@ -1010,7 +1014,7 @@
         private System.Windows.Forms.DataGridView dataGridViewPreview;
         private System.Windows.Forms.GroupBox grpBoxTables;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtBxSearch;
+        private System.Windows.Forms.TextBox txtBoxColumnFilter;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbBoxColType;
         private System.Windows.Forms.DataGridView dataGridViewColumns;
@@ -1077,7 +1081,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ColName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColDataType;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColGenType;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxTableNameFilter;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.DataGridViewCheckBoxColumn ColumnCheck;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;

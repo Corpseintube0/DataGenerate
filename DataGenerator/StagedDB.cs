@@ -63,7 +63,7 @@ namespace DataGenerator
             using (_conn = new SQLiteConnection(_connectionString))
             {
                 _conn.Open();
-                var query = string.Format("DROP TABLE IF exists {0};", tableName);
+                var query = string.Format("DROP TABLE {0};", tableName);
                 SQLiteCommand command = new SQLiteCommand(query, _conn);
                 command.ExecuteNonQuery();
             }
@@ -78,27 +78,28 @@ namespace DataGenerator
             {
                 _conn.Open();
                 var query = string.Format("CREATE TABLE {0} (FK_value {1} PRIMARY KEY);", tableName, valueType);
+                //var query = string.Format("CREATE TABLE {0} (FK_value {1});", tableName, valueType);
                 SQLiteCommand command = new SQLiteCommand(query, _conn);
                 command.ExecuteNonQuery();
             }
         }
 
-        /// <summary>
-        /// Заполняет таблицу внешнего ключа пулом значений.
-        /// </summary>
-        public void FillFKTable(string tableName, string[] values)
-        {
-            using (_conn = new SQLiteConnection(_connectionString))
-            {
-                _conn.Open();
-                SQLiteCommand command;
-                foreach (string value in values)
-                {
-                    command = new SQLiteCommand(String.Format("INSERT INTO '{0}' ('FK_value') VALUES ('{1}');", tableName, value), _conn);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
+        ///// <summary>
+        ///// Заполняет таблицу внешнего ключа пулом значений.
+        ///// </summary>
+        //public void FillFKTable(string tableName, string[] values)
+        //{
+        //    using (_conn = new SQLiteConnection(_connectionString))
+        //    {
+        //        _conn.Open();
+        //        SQLiteCommand command;
+        //        foreach (string value in values)
+        //        {
+        //            command = new SQLiteCommand(String.Format("INSERT INTO '{0}' ('FK_value') VALUES ('{1}');", tableName, value), _conn);
+        //            command.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
 
         public void InsertDataset(string tableName, DataSet newDataSet)
         {
@@ -112,17 +113,65 @@ namespace DataGenerator
                 foreach (DataRow row in newDataSet.Tables[0].Rows)
                 {
                     DataRow newRow = ds.Tables[0].NewRow();
-                    newRow["FKName"] = row["FKName"];
-                    newRow["TableName"] = row["TableName"];
-                    newRow["ColumnName"] = row["ColumnName"];
-                    newRow["RefTableName"] = row["RefTableName"];
-                    newRow["RefColumnName"] = row["RefColumnName"];
+                    foreach (DataColumn col in newDataSet.Tables[0].Columns)
+                        newRow[col.ColumnName] = row[col.ColumnName];
                     ds.Tables[0].Rows.Add(newRow);
                 }
+
                 SQLiteCommandBuilder commandBuilder = new SQLiteCommandBuilder(adapter);
+                //PrintDataSet(ds);
                 adapter.Update(ds);
+                //PrintDataSet(ds);
                 // перезагружаем данные
-                adapter.Fill(ds);
+                //adapter.Fill(ds);
+            }
+        }
+
+        //отладочный метод TODO: delete
+        private void PrintTable(DataTable dt)
+        {
+            Console.WindowHeight = Console.LargestWindowHeight;
+            Console.WindowWidth = Console.LargestWindowWidth;
+            Console.BufferWidth = 1000;
+
+            foreach (System.Collections.DictionaryEntry de in dt.ExtendedProperties)
+                Console.WriteLine("Ключ = {0}, Значение = {1}", de.Key, de.Value);
+            Console.WriteLine();
+
+            // Создание объекта DataTableReader
+            DataTableReader dtReader = dt.CreateDataReader();
+            while (dtReader.Read())
+            {
+                for (int i = 0; i < dtReader.FieldCount; i++)
+                    Console.Write("{0,-20}", dtReader.GetValue(i).ToString().Trim());
+                Console.WriteLine();
+            }
+            dtReader.Close();
+        }
+
+        //отладочный метод TODO: delete
+        private void PrintDataSet(DataSet ds)
+        {
+            Console.BufferWidth = 1000;
+            // Вывод имени и расширенных свойств
+            Console.WriteLine("*** Объекты DataSet ***\n");
+            Console.WriteLine("Имя DataSet: {0}", ds.DataSetName);
+            foreach (System.Collections.DictionaryEntry de in ds.ExtendedProperties)
+                Console.WriteLine("Ключ = {0}, Значение = {1}", de.Key, de.Value);
+            Console.WriteLine();
+
+            // Вывод каждой таблицы
+            foreach (DataTable dt in ds.Tables)
+            {
+                //Console.WriteLine("=> Таблица: {0}", dt.TableName);
+
+                // Вывод имени столбцов
+                for (int curCol = 0; curCol < dt.Columns.Count; ++curCol)
+                    Console.Write("{0,-20}", dt.Columns[curCol].ColumnName);
+                Console.WriteLine("\n----------------------------------------------------------------------------------------------------");
+
+                // Выводим содержимое таблицы
+                PrintTable(dt);
             }
         }
 

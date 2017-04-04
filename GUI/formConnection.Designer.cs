@@ -53,8 +53,8 @@
             this.txtBoxConnectionStr.Name = "txtBoxConnectionStr";
             this.txtBoxConnectionStr.Size = new System.Drawing.Size(617, 20);
             this.txtBoxConnectionStr.TabIndex = 3;
-            this.txtBoxConnectionStr.Text = "Data Source=RFlarson-PC\\SQLEXPRESS;Initial Catalog=integr_lab;Integrated Security" +
-    "=SSPI;";
+            this.txtBoxConnectionStr.Text = "Data Source=RFlarson-PC\\SQLEXPRESS;Initial Catalog=AdventureWorks2014;Integrated " +
+    "Security=SSPI;";
             // 
             // grpBoxConnectionType
             // 
@@ -102,13 +102,13 @@
             this.rdoBtnConnectionType0.Text = "Локальное";
             this.rdoBtnConnectionType0.UseVisualStyleBackColor = true;
             // 
-            // formConnection
+            // FormConnection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 170);
             this.Controls.Add(this.grpBoxConnectionType);
-            this.Name = "formConnection";
+            this.Name = "FormConnection";
             this.Text = "Подключение к базе данных";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.formConnection_FormClosing);
             this.grpBoxConnectionType.ResumeLayout(false);

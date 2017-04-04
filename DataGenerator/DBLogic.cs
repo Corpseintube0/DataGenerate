@@ -315,7 +315,8 @@ namespace DataGenerator
         {
             var ret = new List<String>();
 
-            var ds = SelectRows("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES"); 
+            var ds = SelectRows("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE != 'VIEW'"); 
+            //var ds = SelectRows("SELECT * FROM sys.objects WHERE type in (N'U')");
             var workTable = ds.Tables[0];
             DataRow[] rows = workTable.Select();
             foreach (DataRow row in rows)
@@ -323,8 +324,13 @@ namespace DataGenerator
                 foreach (DataColumn column in workTable.Columns)
                 {
                     if (!(row[column] as string).Contains("sysdiagrams")) //пропустили системную таблицу со связями
-                        ret.Add(String.Format("{0}", row[column])); //TODO: научиться пропускать системные таблицы
+                    ret.Add(String.Format("{0}", row[column]));
                 }
+            }
+            for (int i = 0; i<ret.Count(); ++i)
+            {
+                var schemaName = SelectRows(String.Format("Select TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", ret[i]));
+                ret[i] = schemaName.Tables[0].Rows[0].ItemArray[0].ToString() + "." + ret[i];
             }
             return ret.ToArray();
         }

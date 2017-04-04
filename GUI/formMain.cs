@@ -33,9 +33,7 @@ namespace GUI
         private string _currentTable;
         //список доступных генераторов
         private TestDataGenerator[] _generators;
-
         
-
         public FormMain()
         {
             InitializeComponent();
@@ -97,10 +95,10 @@ namespace GUI
                 toolStripComboBoxGens.ComboBox.DataSource = Enum.GetNames(typeof(GeneratorTypes)); //GeneratorTypes.cs
 
                 string query =  "SELECT " +
-                                "OBJECT_NAME(constraint_object_id) AS FKName, " +
-                                "OBJECT_NAME(parent_object_id) AS TableName, " +
+                                "OBJECT_NAME(parent_object_id) + COL_NAME(parent_object_id, parent_column_id) AS FKName, " +
+                                "OBJECT_SCHEMA_NAME(parent_object_id) + '.' + OBJECT_NAME(parent_object_id) AS TableName," +
                                 "COL_NAME(parent_object_id, parent_column_id) AS ColumnName, " +
-                                "OBJECT_NAME(referenced_object_id) AS RefTableName, " +
+                                "OBJECT_SCHEMA_NAME(referenced_object_id) + '.' + OBJECT_NAME(referenced_object_id) AS RefTableName," +
                                 "COL_NAME(referenced_object_id, referenced_column_id) AS RefColumnName " +
                                 "FROM " +
                                 "sys.foreign_key_columns " +
@@ -108,19 +106,18 @@ namespace GUI
                                 "FKName, " +
                                 "constraint_column_id ";
                 var ds = Program.TargetDB.SelectRows(query);
+
                 Program.StagedDB.InsertDataset("FKList", ds); //заполняем таблицу промежуточной БД данными о внешних ключах
                 DataGridViewSuggestTypes();
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    string name = row["TableName"].ToString() + row["ColumnName"].ToString();
-                    Program.StagedDB.CreateFKTable(name, "TEXT");
-                    string queryToTargetDB = String.Format("SELECT {0} FROM {1}", row["RefColumnName"], row["RefTableName"]);
-                    var valuesFormTargetDB = Program.TargetDB.SelectRows(queryToTargetDB);
-                    List<string> temp = new List<string>();
-                    foreach (DataRow row2 in valuesFormTargetDB.Tables[0].Rows)
-                        temp.Add(row2[0].ToString());
-                    Program.StagedDB.FillFKTable(name, temp.ToArray());
-                }
+                //foreach (DataRow row in ds.Tables[0].Rows) //del
+                //{
+                //    string name = row["TableName"].ToString() + row["ColumnName"].ToString();
+                //    name = name.Replace('.', '_'); //костыль
+                //    Program.StagedDB.CreateFKTable(name, "TEXT");
+                //    string queryToTargetDB = String.Format("SELECT {0} as FK_value FROM {1}", row["RefColumnName"], row["RefTableName"]);
+                //    var valuesFormTargetDB = Program.TargetDB.SelectRows(queryToTargetDB);
+                //    Program.StagedDB.InsertDataset(name, valuesFormTargetDB);
+                //}
             }
             else
             {
@@ -160,6 +157,7 @@ namespace GUI
             //проверяем есть ли в текущей таблице внешние ключи
             string sql = String.Format("SELECT TableName, ColumnName FROM FKList WHERE TableName = '{0}'", _currentTable);
             DataSet ds = Program.StagedDB.SelectRows(sql);
+            //PrintDataSet(ds);
             List<string> fkColumns = new List<string>();
             if (ds.Tables != null)
             {
@@ -191,14 +189,19 @@ namespace GUI
                             (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Text.ToString();
                         break;
                     case "date":
+                    case "datetime":
                         (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Date.ToString();
                         break;
+                    case "smallint":
+                    case "tinyint":
                     case "int":
                     case "float": //TODO: исправить
                         (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Int.ToString();
                         break;
                     default:
-                        throw new Exception("No such a type!");
+                        (dataGridViewColumns.Rows[i].Cells[3]).Value = GeneratorTypes.Text.ToString(); //для пользовательских типов (возможно, потом заменится)
+                        break;
+                        //throw new Exception("No such a type!");
                 }
             }
         }            
@@ -295,8 +298,12 @@ namespace GUI
                         _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
                         break;
                     case GeneratorTypes.ForeinKey:
-                        //TODO: Выполнить назначение генератора с соответствующим DataSet
-                        DataSet ds = Program.StagedDB.SelectRows(string.Format("SELECT * FROM {0}{1};", _currentTable, colNames[i]));
+                        //string stagedTableName = _currentTable.Replace('.', '_');
+                        string sqlRef = String.Format("SELECT RefTableName, RefColumnName FROM FKList WHERE TableName='{0}' AND ColumnName = '{1}'", _currentTable, colNames[i]);
+                        var dsRef = Program.StagedDB.SelectRows(sqlRef);
+                        string refColumnName = dsRef.Tables[0].Rows[0]["RefColumnName"].ToString();
+                        string refTableName = dsRef.Tables[0].Rows[0]["RefTableName"].ToString();
+                        DataSet ds = Program.TargetDB.SelectRows(string.Format("SELECT {0} FROM {1};", refColumnName, refTableName));
                         _generators[i] = new ForeignKeyGenerator(ds);
                         break;
                     default:
@@ -429,8 +436,8 @@ namespace GUI
                 toolStripComboBoxGens.Enabled = true;
             dataGridViewColumns.CurrentRow.Selected = true;
             grpBoxOptions.Text = String.Format("Настройки генерации для {0}", dataGridViewColumns.CurrentRow.Cells[3].Value);
-            if (dataGridViewPreview.Columns.Count > 0)
-                dataGridViewPreview.Columns[dataGridViewColumns.CurrentRow.Index].Selected = true;
+            //if (dataGridViewPreview.Columns.Count > 0)
+            //    dataGridViewPreview.Columns[dataGridViewColumns.CurrentRow.Index].Selected = true;
         }
 
         //обработчик события
@@ -499,7 +506,6 @@ namespace GUI
         {
             if (e.ColumnIndex != 0)
                 return;
-
         }
 
         //отладочный метод TODO: delete
@@ -547,6 +553,50 @@ namespace GUI
 
                 // Выводим содержимое таблицы
                 PrintTable(dt);
+            }
+        }
+
+        /// <summary>
+        /// Фильтр по имени таблицы.
+        /// </summary>
+        private void textBoxTableNameFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewTables.Rows)
+            {
+                string tableName = row.Cells[1].Value.ToString().ToLower();
+                if (!tableName.Contains(textBoxTableNameFilter.Text.ToLower()))
+                    row.Visible = false;
+            }
+        }
+
+        private void textBoxTableNameFilter_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxTableNameFilter.Text == "")
+            {
+                foreach (DataGridViewRow row in dataGridViewTables.Rows)
+                    row.Visible = true;
+            }
+        }
+
+        private void txtBoxColumnFilter_TextChanged(object sender, EventArgs e)
+        {
+            if (txtBoxColumnFilter.Text == "")
+            {
+                foreach (DataGridViewRow row in dataGridViewColumns.Rows)
+                    row.Visible = true;
+            }
+        }
+
+        /// <summary>
+        /// Фильтр по имени столбца.
+        /// </summary>
+        private void txtBoxColumnFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewColumns.Rows)
+            {
+                string colName = row.Cells[1].Value.ToString().ToLower();
+                if (!colName.Contains(txtBoxColumnFilter.Text.ToLower()))
+                    row.Visible = false;
             }
         }
     }
