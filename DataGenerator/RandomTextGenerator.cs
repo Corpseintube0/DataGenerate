@@ -3,50 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using System.Data.SQLite;
 
 namespace DataGenerator
 {
+    /// <summary>
+    /// Генератор случайного текста.
+    /// </summary>
     public class RandomTextGenerator : TestDataGenerator
     {
         /// <summary>
         /// Инициализатор генератора случайных чисел.
         /// </summary>
-        private int _seed;
+        //private int _seed;
 
-        /// <summary>
-        /// Представление для текстового файла словаря.
-        /// </summary>
-        private Thesaurus _lexicon;
-
-        /// <summary>
-        /// 
-        /// </summary>
         private Random _rnd = RandomProvider.GetThreadRandom();
+
+        private RandomTextVocabularyDB _vocabulary;
 
         public RandomTextGenerator()
         {
-            _seed = DateTime.Now.Millisecond;
-            _lexicon = new Thesaurus("pldf-win.txt");
+            _vocabulary = new RandomTextVocabularyDB();
+            WordsAmount = 20;
         }
 
         public RandomTextGenerator(int wordsAmt)
         {
-            _seed = DateTime.Now.Millisecond;
+            _vocabulary = new RandomTextVocabularyDB();
             WordsAmount = wordsAmt;
-            _lexicon = new Thesaurus("pldf-win.txt");
         }
 
+        /// <summary>
+        /// Количество слов для генерации.
+        /// </summary>
         public int WordsAmount { get; set; }
 
         public override string Next()
         {
-            string ret = "";
+            string result = "";
+            var ds = _vocabulary.GetRandomValues(WordsAmount);
             for (int i = 0; i < WordsAmount; ++i)
-            {
-                int index = _rnd.Next(0, _lexicon.Count);
-                ret += _lexicon[index] + " ";
-            }
-            return ret;
+                result += ds.Tables[0].Rows[i].ItemArray[0].ToString() + " ";
+            return result;
         }
 
         public override string[] NextSet(int amt)

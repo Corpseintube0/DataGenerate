@@ -8,6 +8,7 @@ namespace DataGenerator
 {
     public class GuidGenerator : TestDataGenerator
     {
+
         public override string Next()
         {
             return Guid.NewGuid().ToString();

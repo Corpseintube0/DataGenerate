@@ -30,6 +30,12 @@ namespace DataGenerator
             _seed = DateTime.Now.Millisecond;
             _ds = arg;
         }
+
+        public ForeignKeyGenerator()
+        {
+            
+        }
+
         public override string Next()
         {
             DataTable dt = _ds.Tables[0];

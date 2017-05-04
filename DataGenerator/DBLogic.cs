@@ -309,14 +309,18 @@ namespace DataGenerator
         }
 
         /// <summary>
-        /// Возвращает набор имён таблиц БД.
+        /// Возвращает набор имён таблиц.
         /// </summary>
-        public String[] GetTableNames()
+        /// <param name="schemas">Нужно ли к имени добавлять схему.</param>
+        /// <param name="tableType">Тип таблицы (VIEW, BASE TABLE).</param>
+        public string[] GetTableNames(bool schemas, string tableType = "")
         {
-            var ret = new List<String>();
-
-            var ds = SelectRows("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE != 'VIEW'"); 
-            //var ds = SelectRows("SELECT * FROM sys.objects WHERE type in (N'U')");
+            var names = new List<String>();
+            string query = 
+                tableType == "" ? 
+                "SELECT TABLE_NAME FROM information_schema.TABLES" : 
+                String.Format("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE = '{0}'", tableType);
+            var ds = SelectRows(query);
             var workTable = ds.Tables[0];
             DataRow[] rows = workTable.Select();
             foreach (DataRow row in rows)
@@ -324,19 +328,23 @@ namespace DataGenerator
                 foreach (DataColumn column in workTable.Columns)
                 {
                     if (!(row[column] as string).Contains("sysdiagrams")) //пропустили системную таблицу со связями
-                    ret.Add(String.Format("{0}", row[column]));
+                        names.Add(String.Format("{0}", row[column]));
                 }
             }
-            for (int i = 0; i<ret.Count(); ++i)
+            if (schemas)
             {
-                var schemaName = SelectRows(String.Format("Select TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", ret[i]));
-                ret[i] = schemaName.Tables[0].Rows[0].ItemArray[0].ToString() + "." + ret[i];
+                for (int i = 0; i < names.Count(); ++i)
+                {
+                    var schema = SelectRows(String.Format("Select TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", names[i]));
+                    string schemaName = schema.Tables[0].Rows[0].ItemArray[0].ToString();
+                    names[i] = String.Format("{0}.{1}", schemaName, names[i]);
+                }
             }
-            return ret.ToArray();
+            return names.ToArray();
         }
 
         /// <summary>
-        /// Получает список с именами столбцов. 
+        /// Получает список с именами столбцов.
         /// </summary>
         /// <param name="tableName">Имя таблицы.</param>
         public String[] GetColumnNames(string tableName)
@@ -418,7 +426,7 @@ namespace DataGenerator
             using (_conn = new SqlConnection(ConnectionString))
             {
                 _conn.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM " + tableName + ";", _conn);
+                SqlCommand command = new SqlCommand("SELECT TOP(0) * FROM " + tableName + ";", _conn);
                 SqlDataReader reader = command.ExecuteReader();
                 DataTable schemaTable = reader.GetSchemaTable();
                 return schemaTable;

@@ -10,7 +10,7 @@ namespace GUI
     static class Program
     {
         private static DBLogic _targetDB = new DBLogic(); //целевая БД
-        private static StagedDB _stagedDB = new StagedDB(); //промежуточная БД
+        private static StagedDB _stagedDB = new StagedDB("StagedDB.db"); //промежуточная БД
 
         public static DBLogic TargetDB
         {

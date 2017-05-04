@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace DataGenerator
 {
-    //[GeneratorStyles(DesignerStyles = GeneratorDesignerStyles.CanProduceUniqueValues)]
-    //public class MyGenerator : Generator
-    //{
-
-    //}
     public abstract class TestDataGenerator
     {
         /// <summary>

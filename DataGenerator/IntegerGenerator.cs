@@ -30,11 +30,11 @@ namespace DataGenerator
             _upper = to;
         }
 
-        public IntegerGenerator(int from, int to)
+        public IntegerGenerator(int min, int max)
         {
             _seed = DateTime.Now.Millisecond;
-            _lower = from;
-            _upper = to;
+            _lower = min;
+            _upper = max;
         }
 
         public override string Next()

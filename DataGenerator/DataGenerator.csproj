@@ -58,12 +58,14 @@
   <ItemGroup>
     <Compile Include="DateTimeGenerator.cs" />
     <Compile Include="DBLogic.cs" />
-    <Compile Include="ForeinKeyGenerator.cs" />
+    <Compile Include="ForeignKeyGenerator.cs" />
     <Compile Include="GeneratorTypes.cs" />
     <Compile Include="GuidGenerator.cs" />
     <Compile Include="IntegerGenerator.cs" />
     <Compile Include="RandomProvider.cs" />
     <Compile Include="RandomTextGenerator.cs" />
+    <Compile Include="RandomTextVocabularyDB.cs" />
+    <Compile Include="SQLiteDB.cs" />
     <Compile Include="StagedDB.cs" />
     <Compile Include="TestDataGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

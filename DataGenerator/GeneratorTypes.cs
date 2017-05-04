@@ -12,11 +12,22 @@ namespace DataGenerator
     public enum GeneratorTypes
     {
         GUID,
-        Int,
+        Integer,
         Text,
         Date,
         Names,
-        Surnames,
-        ForeinKey
+        Lastnames,
+        ForeignKey,
+        Time,           //время
+        DateTime,       //дата+время
+        Department,     //отдел
+        WorkingPosition,//должность
+        Country,        //страна
+        Emails,         //почтовые адреса
+        Hash,           //хэш-функция
+        Gender,         //пол
+        PhoneNumber,    //номер телефона    
+        Cities,         //Города
+        PostalCode      //Почтовый индекс
     }
 }

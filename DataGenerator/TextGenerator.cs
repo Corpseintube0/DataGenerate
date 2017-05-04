@@ -23,16 +23,58 @@ namespace DataGenerator
         /// </summary>
         private Random _rnd = RandomProvider.GetThreadRandom();
 
+        private string _assignedName;
+
+        /// <summary>
+        /// Получает назначенное тематическое имя данного генератора.
+        /// </summary>
+        public string AssignedName
+        {
+            get { return _assignedName; }
+            set { _assignedName = value; }
+        }
+
+        public string FileName
+        {
+            get;
+            set;
+        }
+
+        public TextGenerator()
+        {
+            _seed = DateTime.Now.Millisecond;
+            AssignedName = "TextValues";
+        }
+
         public TextGenerator(String fileName)
         {
             _seed = DateTime.Now.Millisecond;
             _lexicon = new Thesaurus(fileName);
+            FileName = fileName;
+            AssignedName = fileName;
         }
 
         public TextGenerator(int seed, String fileName)
         {
             _seed = seed;
             _lexicon = new Thesaurus(fileName);
+            FileName = fileName;
+            AssignedName = fileName;
+        }
+        public TextGenerator(String fileName, string assignedName)
+        {
+            _seed = DateTime.Now.Millisecond;
+            _lexicon = new Thesaurus(fileName);
+            FileName = fileName;
+            AssignedName = assignedName;
+        }
+
+        public TextGenerator(int seed, String fileName, string assignedName)
+        {
+            _seed = seed;
+            _lexicon = new Thesaurus(fileName);
+            FileName = fileName;
+            AssignedName = assignedName;
         }
 
         public override string Next()
