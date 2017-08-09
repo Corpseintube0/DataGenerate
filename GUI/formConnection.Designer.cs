@@ -62,8 +62,8 @@
             this.txtBoxConnectionStr.Name = "txtBoxConnectionStr";
             this.txtBoxConnectionStr.Size = new System.Drawing.Size(688, 20);
             this.txtBoxConnectionStr.TabIndex = 3;
-            this.txtBoxConnectionStr.Text = "Data Source=RFlarson-PC\\SQLEXPRESS;Initial Catalog=Integr_lab;Integrated Security" +
-    "=SSPI;";
+            this.txtBoxConnectionStr.Text = "Data Source=RFlarson-PC\\SQLEXPRESS;Initial Catalog=AdventureWorks2014;Integrated " +
+    "Security=SSPI;";
             this.txtBoxConnectionStr.TextChanged += new System.EventHandler(this.txtBoxConnectionStr_TextChanged);
             this.txtBoxConnectionStr.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBoxConnectionStr_KeyDown);
             // 

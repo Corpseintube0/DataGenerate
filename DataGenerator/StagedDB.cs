@@ -8,7 +8,7 @@ using System.Data.SQLite;
 namespace DataGenerator
 {
     /// <summary>
-    /// Класс для хранения структуры данных целевой БД и обеспечения функционала ETL модели.
+    /// Класс для обеспечения доступа к храненимым данным промежуточной БД и обеспечения функционала ETL модели.
     /// </summary>
     public class StagedDB : SQLiteDB
     {
@@ -61,6 +61,17 @@ namespace DataGenerator
             }
             else
                 DeleteValues("TableColumnAttributes");
+            if (!tables.Contains("CustomGeneratorsList"))
+            {
+                using (_connection = new SQLiteConnection(_connectionString))
+                {
+                    _connection.Open();
+                    //создание таблицы с данными о внешних ключах
+                    SQLiteCommand command =
+                        new SQLiteCommand("CREATE TABLE CustomGeneratorsList (CGName TEXT PRIMARY KEY, Path TEXT);", _connection);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public void DeleteValues(string tablename)

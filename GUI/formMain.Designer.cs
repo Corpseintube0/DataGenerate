@@ -185,6 +185,7 @@
             this.toolStripGenerator = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripComboBoxGens = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonGeneratorEditor = new System.Windows.Forms.ToolStripButton();
             this.panelSplit = new System.Windows.Forms.Panel();
             this.buttonShowHideTables = new System.Windows.Forms.Button();
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
@@ -2003,7 +2004,8 @@
             this.toolStripGenerator.GripMargin = new System.Windows.Forms.Padding(3);
             this.toolStripGenerator.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel2,
-            this.toolStripComboBoxGens});
+            this.toolStripComboBoxGens,
+            this.toolStripButtonGeneratorEditor});
             this.toolStripGenerator.Location = new System.Drawing.Point(549, 30);
             this.toolStripGenerator.Name = "toolStripGenerator";
             this.toolStripGenerator.Size = new System.Drawing.Size(488, 40);
@@ -2022,6 +2024,16 @@
             this.toolStripComboBoxGens.Name = "toolStripComboBoxGens";
             this.toolStripComboBoxGens.Size = new System.Drawing.Size(180, 40);
             this.toolStripComboBoxGens.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxGens_SelectedIndexChanged);
+            // 
+            // toolStripButtonGeneratorEditor
+            // 
+            this.toolStripButtonGeneratorEditor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGeneratorEditor.Image = global::GUI.Properties.Resources.CONTROL;
+            this.toolStripButtonGeneratorEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGeneratorEditor.Name = "toolStripButtonGeneratorEditor";
+            this.toolStripButtonGeneratorEditor.Size = new System.Drawing.Size(23, 37);
+            this.toolStripButtonGeneratorEditor.Text = "Редактировать пользовательские генераторы";
+            this.toolStripButtonGeneratorEditor.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // panelSplit
             // 
@@ -2330,5 +2342,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBoxTableNameFilter;
         private System.Windows.Forms.ComboBox comboBoxSort;
+        private System.Windows.Forms.ToolStripButton toolStripButtonGeneratorEditor;
     }
 }

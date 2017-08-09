@@ -63,6 +63,36 @@ namespace GUI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _845905_MLB25084125656_102016_C {
+            get {
+                object obj = ResourceManager.GetObject("845905-MLB25084125656_102016-C", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Add {
+            get {
+                object obj = ResourceManager.GetObject("Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Add1 {
+            get {
+                object obj = ResourceManager.GetObject("Add1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap CHAT {
             get {
                 object obj = ResourceManager.GetObject("CHAT", resourceCulture);
@@ -86,6 +116,16 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap CONTROL {
             get {
                 object obj = ResourceManager.GetObject("CONTROL", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Del {
+            get {
+                object obj = ResourceManager.GetObject("Del", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -156,6 +196,16 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap HOME {
             get {
                 object obj = ResourceManager.GetObject("HOME", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icon_delete_2400px {
+            get {
+                object obj = ResourceManager.GetObject("icon-delete-2400px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -386,6 +436,16 @@ namespace GUI.Properties {
         internal static System.Drawing.Bitmap VIDEO {
             get {
                 object obj = ResourceManager.GetObject("VIDEO", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap w512h5121380984696edit {
+            get {
+                object obj = ResourceManager.GetObject("w512h5121380984696edit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

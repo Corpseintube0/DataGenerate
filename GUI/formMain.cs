@@ -4,21 +4,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataGenerator;
 using System.IO;
-using System.Threading;
 using System.Runtime.InteropServices;
 
 namespace GUI
 {
     public partial class FormMain : Form
     {
-
-        //private string[] _genTypes = Enum.GetNames(typeof(GeneratorTypes));
-
         /// <summary>
         /// Значения, сгенерированные в текущей сессии работы.
         /// </summary>
@@ -42,7 +37,12 @@ namespace GUI
         /// </summary>
         private Dictionary<TableColumnPair, TestDataGenerator> _colGenDictionary = new Dictionary<TableColumnPair, TestDataGenerator>();
         //private FormAutoRules _formAutoRules;
-
+        //список доступных генераторов данных
+        private List<string> generatorsList;
+        /// <summary>
+        /// Заданные пользователем генераторы данных.
+        /// </summary>
+        private List<string> customGens;
         public FormMain()
         {
             InitializeComponent();
@@ -54,7 +54,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// Для отладки. Delete
+        /// Для отладки. TODO: Delete
         /// </summary>
         private void DebugConsole()
         {
@@ -79,7 +79,8 @@ namespace GUI
                 FreeConsole();
             }
         }
-        //-==============================================- для консоли TODO: del
+        //-==============================================- 
+        //TODO: delete
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool AllocConsole();
@@ -101,7 +102,15 @@ namespace GUI
                 //Составление словаря из пар "имя_таблицы-имя_столбца"
                 
                 dataGridViewTables.Sort(dataGridViewTables.Columns[1], ListSortDirection.Ascending);
-                toolStripComboBoxGens.ComboBox.DataSource = Enum.GetNames(typeof(GeneratorTypes)); //GeneratorTypes.cs
+                generatorsList = new List<string>(Enum.GetNames(typeof(GeneratorTypes)));
+                customGens = new List<string>();
+                var ds = Program.StagedDB.SelectRows("SELECT CGName FROM CustomGeneratorsList");
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    generatorsList.Add(row.ItemArray[0].ToString());
+                    customGens.Add(row.ItemArray[0].ToString());
+                }
+                toolStripComboBoxGens.ComboBox.DataSource = generatorsList.ToArray();//GeneratorTypes.cs
                 //заполнение данных о внешних ключах
                 string query =  "SELECT " +
                                 "OBJECT_NAME(parent_object_id) + COL_NAME(parent_object_id, parent_column_id) AS FKName, " +
@@ -114,7 +123,7 @@ namespace GUI
                                 "ORDER BY " +
                                 "FKName, " +
                                 "constraint_column_id ";
-                var ds = Program.TargetDB.SelectRows(query);
+                ds = Program.TargetDB.SelectRows(query);
                 Program.StagedDB.InsertDataset("FKList", ds);
 
                 query = "SELECT TABLE_SCHEMA + '.' + TABLE_NAME as TABLE_NAME, COLUMN_NAME, DATA_TYPE, IS_NULLABLE, CHARACTER_MAXIMUM_LENGTH FROM information_schema.columns";
@@ -196,7 +205,7 @@ namespace GUI
         }
 
         /// <summary>
-        /// Заполняет словарь (таблицы, столбцы) значениями (тип генератора)
+        /// Заполняет словарь (таблицы, столбцы) значениями (тип генератора).
         /// </summary>
         private void GeneratorTypesAutoAssign()
         {
@@ -402,6 +411,7 @@ namespace GUI
                 case GeneratorTypes.Integer:
                     return new IntegerGenerator(1, 200);
                 case GeneratorTypes.Date:
+                case GeneratorTypes.DateTime:
                     return new DateTimeGenerator(new DateTime(1960, 12, 15), new DateTime(2000, 12, 20));
                 case GeneratorTypes.Text:
                     return new RandomTextGenerator(25);
@@ -430,33 +440,6 @@ namespace GUI
 
             var colNames = Program.TargetDB.GetColumnNames(_currentTableName);
             int colCount = colNames.Length; //число столбцов и генераторов
-            //_generators = new TestDataGenerator[colCount];
-            //for (int i = 0; i < colCount; ++i)
-            //{
-            //    object gen = Enum.Parse(typeof(GeneratorTypes), (string)dataGridViewColumns.Rows[i].Cells[3].Value);
-            //    switch ((GeneratorTypes)gen)
-            //    {
-            //        case GeneratorTypes.Integer:
-            //           // _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
-            //            break;
-            //        case GeneratorTypes.ForeignKey:
-            //            //string stagedTableName = _currentTable.Replace('.', '_');
-            //            string sqlRef = String.Format("SELECT RefTableName, RefColumnName FROM FKList WHERE TableName='{0}' AND ColumnName='{1}'", _currentTableName, colNames[i]);
-            //            var dsRef = Program.StagedDB.SelectRows(sqlRef);
-            //            string refColumnName = dsRef.Tables[0].Rows[0]["RefColumnName"].ToString();
-            //            string refTableName = dsRef.Tables[0].Rows[0]["RefTableName"].ToString();
-            //            DataSet ds = Program.TargetDB.SelectRows(string.Format("SELECT {0} FROM {1};", refColumnName, refTableName));
-            //            _generators[i] = new ForeignKeyGenerator(ds);
-            //            break;
-            //        default:
-            //            _generators[i] = GetGeneratorFromType((GeneratorTypes)gen);
-            //            break;
-            //    }
-                //if ((GeneratorTypes)gen == GeneratorTypes.Int)
-                //    _generators[i] = new IntegerGenerator((int)UpDownMin.Value, (int)UpDownMax.Value);
-                //else
-                //    _generators[i] = GetGeneratorFromType((GeneratorTypes)gen);
-            //}
             bool sqlExport = chkBoxExportToSQL.Checked;
             StreamWriter sw;
             var date = DateTime.Now;
@@ -580,11 +563,21 @@ namespace GUI
             grpBoxOptions.Text = String.Format("Настройки генерации для {0}", generatorName);
             //if (dataGridViewPreview.Columns.Count > 0)
             //    dataGridViewPreview.Columns[dataGridViewColumns.CurrentRow.Index].Selected = true;
-            var genType = Enum.Parse(typeof(GeneratorTypes), generatorName);
-            ShowGenerationPanel((GeneratorTypes)genType);
+            object genType;
+            if (customGens.Contains(toolStripComboBoxGens.Text))
+            {
+                genType = null;
+                ShowGenerationPanel(GeneratorTypes.Names);
+            }
+                
+            else
+            {
+                genType = Enum.Parse(typeof(GeneratorTypes), generatorName);
+                ShowGenerationPanel((GeneratorTypes)genType);
+            }
         }
 
-        //обработчик события
+        //обработчик события: смена индекса в списке генераторов
         private void toolStripComboBoxGens_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dataGridViewColumns.CurrentRow == null)
@@ -597,11 +590,26 @@ namespace GUI
             }
             dataGridViewColumns.CurrentRow.Cells[3].Value = toolStripComboBoxGens.Text;
             grpBoxOptions.Text = String.Format("Настройки генерации для {0}", genName);
-            var genType = Enum.Parse(typeof(GeneratorTypes), toolStripComboBoxGens.Text);
-            ShowGenerationPanel((GeneratorTypes)genType);
+            object genType;
+            if (customGens.Contains(toolStripComboBoxGens.Text))
+                genType = null;
+            else
+                genType = Enum.Parse(typeof(GeneratorTypes), toolStripComboBoxGens.Text);
             string colName = dataGridViewColumns.CurrentRow.Cells[1].Value.ToString();
             string tableName = dataGridViewTables.CurrentRow.Cells[1].Value.ToString();
-            _colGenDictionary[new TableColumnPair(tableName, colName)] = GetGeneratorFromType((GeneratorTypes)genType);
+            
+            if (genType == null)
+            {
+                ShowGenerationPanel(GeneratorTypes.Names); 
+                var ds = Program.StagedDB.SelectRows(String.Format("SELECT Path FROM CustomGeneratorsList WHERE CGName='{0}'", toolStripComboBoxGens.Text));
+                _colGenDictionary[new TableColumnPair(tableName, colName)] = new TextGenerator(ds.Tables[0].Rows[0].ItemArray[0].ToString());
+            }
+            
+            else
+            {
+                ShowGenerationPanel((GeneratorTypes)genType);
+                _colGenDictionary[new TableColumnPair(tableName, colName)] = GetGeneratorFromType((GeneratorTypes)genType);
+            }
         }
 
         //Обработка нажатия горячих клавиш
@@ -833,6 +841,21 @@ namespace GUI
         private void RecordGeneratorParameters()
         {
 
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            var baseNames = Enum.GetNames(typeof(GeneratorTypes));
+            new FormCustomGeneratorAdd(baseNames).ShowDialog();
+            generatorsList = new List<string>(Enum.GetNames(typeof(GeneratorTypes)));
+            customGens = new List<string>();
+            var ds = Program.StagedDB.SelectRows("SELECT CGName FROM CustomGeneratorsList");
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                generatorsList.Add(row.ItemArray[0].ToString());
+                customGens.Add(row.ItemArray[0].ToString());
+            }
+            toolStripComboBoxGens.ComboBox.DataSource = generatorsList.ToArray();
         }
     }
 }

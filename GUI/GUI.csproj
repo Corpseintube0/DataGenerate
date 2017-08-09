@@ -40,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,6 +53,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOrRenameGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddOrRenameGenerator.Designer.cs">
+      <DependentUpon>AddOrRenameGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomGeneratorCollection.cs" />
+    <Compile Include="CustomGeneratorElement.cs" />
+    <Compile Include="CustomGeneratorsConfigSection.cs" />
     <Compile Include="FormAutoRules.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +73,12 @@
     </Compile>
     <Compile Include="FormConnection.Designer.cs">
       <DependentUpon>FormConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCustomGeneratorAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCustomGeneratorAdd.Designer.cs">
+      <DependentUpon>FormCustomGeneratorAdd.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -84,11 +100,17 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableColumnPair.cs" />
+    <EmbeddedResource Include="AddOrRenameGenerator.resx">
+      <DependentUpon>AddOrRenameGenerator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormAutoRules.resx">
       <DependentUpon>FormAutoRules.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormConnection.resx">
       <DependentUpon>FormConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCustomGeneratorAdd.resx">
+      <DependentUpon>FormCustomGeneratorAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -110,6 +132,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Custom.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -130,7 +153,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\845905-MLB25084125656_102016-C.jpg" />
     <Content Include="Resources\ACTIVE~1.ICO" />
+    <None Include="Resources\Add.png" />
+    <None Include="Resources\Add1.png" />
     <Content Include="Resources\BIGFLO~1.ICO" />
     <Content Include="Resources\CALCUL~1.ICO" />
     <Content Include="Resources\CD-ROM.ICO" />
@@ -138,6 +164,7 @@
     <Content Include="Resources\CHECK.ICO" />
     <Content Include="Resources\CONTROL.ICO" />
     <Content Include="Resources\CONTRO~1.ICO" />
+    <None Include="Resources\Del.png" />
     <Content Include="Resources\DESKTOP.ICO" />
     <Content Include="Resources\doublegames.ico" />
     <Content Include="Resources\EXCEL.ICO" />
@@ -148,6 +175,7 @@
     <Content Include="Resources\HARDDR~1.ICO" />
     <Content Include="Resources\HELP.ICO" />
     <Content Include="Resources\HOME.ICO" />
+    <None Include="Resources\icon-delete-2400px.png" />
     <Content Include="Resources\IE.ICO" />
     <Content Include="Resources\INTERN~1.ICO" />
     <Content Include="Resources\LOGOFF.ICO" />
@@ -184,6 +212,7 @@
     <Content Include="Resources\VIDEO.ICO" />
     <Content Include="Resources\VIDEOF~1.ICO" />
     <Content Include="Resources\VIDEOF~2.ICO" />
+    <None Include="Resources\w512h5121380984696edit.png" />
     <Content Include="Resources\WORD.ICO" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
